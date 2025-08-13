@@ -1,5 +1,6 @@
 import { Button } from "@mantine/core";
 import { Routes, Route } from "react-router-dom";
+import AppLayout from "../layout/AppLayout";
 // import Home from "../pages/Home.jsx";
 // import Login from "../pages/Login.jsx";
 
@@ -9,19 +10,17 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={
-          <>
-            <Button color="brand">Custom Brand Button</Button>
-          </>
+            <Button>login</Button>
         }
       />
-      {/* <Route
-        path="/login"
+      <Route
+        path="/dashboard"
         element={
-          <Layout>
-            <Login />
-          </Layout>
+          <AppLayout>
+            <Button></Button>
+          </AppLayout>
         }
-      /> */}
+      />
     </Routes>
   );
 }
