@@ -1,16 +1,26 @@
 // src/features/auth/components/LoginForm.tsx
-import { useState } from 'react';
-import { TextInput, PasswordInput, Checkbox, Button, Stack } from '@mantine/core';
+import { useState } from "react";
+import {
+  TextInput,
+  PasswordInput,
+  Checkbox,
+  Button,
+  Stack,
+} from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: call login API or auth store
-    console.log('Login', { email, password, rememberMe });
+    console.log("Login", { email, password, rememberMe });
+    navigate("/dashboard");
   };
 
   return (
@@ -24,6 +34,7 @@ export default function LoginForm() {
         />
         <PasswordInput
           label="Password"
+          
           required
           value={password}
           onChange={(e) => setPassword(e.currentTarget.value)}
@@ -33,7 +44,8 @@ export default function LoginForm() {
           checked={rememberMe}
           onChange={(e) => setRememberMe(e.currentTarget.checked)}
         />
-        <Button type="submit" fullWidth>
+
+        <Button type="submit" onClick={() => navigate("/dashboard")} fullWidth>
           Sign in
         </Button>
       </Stack>

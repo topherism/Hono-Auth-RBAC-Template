@@ -1,5 +1,7 @@
-import { Group, Burger, Menu, Avatar, Text } from "@mantine/core";
+import { Group, Burger, Menu, Avatar, Text, Image, Box } from "@mantine/core";
 import { Link } from "react-router-dom";
+import logo from "../assets/img/logo/logo-3.png";
+// import { SearchInputWithButton } from "../components/SearchInputWithButton";
 
 interface HeaderProps {
   opened: boolean;
@@ -9,7 +11,15 @@ interface HeaderProps {
 export default function Header({ opened, toggle }: HeaderProps) {
   return (
     <Group h="100%" px="md" justify="space-between">
-      <Burger opened={opened} onClick={toggle} size="sm" />
+      <Box display='flex'>
+        <Burger opened={opened} onClick={toggle} size="sm" />
+
+      </Box>
+
+      {/* Centered Logo */}
+      <Box>
+        <Image src={logo} alt="TrackKIT Logo" height={40} fit="contain" />
+      </Box>
 
       <Menu shadow="md" width={200}>
         <Menu.Target>
