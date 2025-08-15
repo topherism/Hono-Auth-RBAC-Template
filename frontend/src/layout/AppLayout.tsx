@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { AppShell } from "@mantine/core";
+import { AppShell, useMantineTheme } from "@mantine/core";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const theme = useMantineTheme();
   const [opened, setOpened] = useState(true);
 
   return (
@@ -23,8 +24,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Navbar p="xs">
         <Sidebar opened={opened} />
       </AppShell.Navbar>
-
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main style={{ background: theme.other.gradients.sunset }}>
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 }

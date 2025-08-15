@@ -1,4 +1,4 @@
-import type { MantineThemeOverride } from "@mantine/core";
+import { colorsTuple, type MantineThemeOverride } from "@mantine/core";
 
 export const theme: MantineThemeOverride = {
   colors: {
@@ -14,6 +14,14 @@ export const theme: MantineThemeOverride = {
       "#8f2414",
       "#6b1a0f",
     ],
+    background: colorsTuple("#ffebefff"),
+  },
+  other: {
+    gradients: {
+      login_background: "linear-gradient(135deg, rgba(180,40,40,0.25) 0%, rgba(80,0,0,1) 100%)",
+      ocean: "linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)",
+      sunset: "linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)",
+    },
   },
   primaryColor: "brand",
   primaryShade: { light: 5, dark: 5 },
