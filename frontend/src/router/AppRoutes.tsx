@@ -1,18 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "../layout/AppLayout";
-import LoginPage from "../features/auth/pages/LoginPage";
+import Login from "../features/auth/pages/Login";
+import Dashboard from "../features/dashboard/pages/Dashboard";
 // import Home from "../pages/Home.jsx";
 // import Login from "../pages/Login.jsx";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<Login />} />
       <Route
         path="/dashboard"
         element={
           <AppLayout>
-            <h1>Dashboard</h1>
+            <Dashboard />
           </AppLayout>
         }
       />

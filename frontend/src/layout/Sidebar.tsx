@@ -1,4 +1,4 @@
-import { ScrollArea, NavLink, rem } from "@mantine/core";
+import { ScrollArea, NavLink, rem, Box } from "@mantine/core";
 import {
   IconDashboard,
   IconBox,
@@ -6,34 +6,50 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import { Link, useLocation } from "react-router-dom";
+import SearchInputWithButton from "../components/SearchInputWithButton";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface SidebarProps {
   opened: boolean;
 }
 
 export default function Sidebar({ opened }: SidebarProps) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const location = useLocation();
 
   const navItems = [
-    { label: "Dashboard", path: "/dashboard", icon: <IconDashboard size={18} /> },
-    { label: "Inventory", path: "/inventory", icon: <IconBox size={18} /> },
-    { label: "Reports", path: "/reports", icon: <IconReportAnalytics size={18} /> },
-    { label: "Settings", path: "/settings", icon: <IconSettings size={18} /> },
+    { label: "Dashboard", path: "/dashboard", icon: IconDashboard },
+    { label: "Inventory", path: "/inventory", icon: IconBox },
+    { label: "Reports", path: "/reports", icon: IconReportAnalytics },
+    { label: "Settings", path: "/settings", icon: IconSettings },
   ];
 
   return (
-    <ScrollArea style={{ flex: 1 }}>
-      {navItems.map((item) => (
-        <NavLink
-          key={item.path}
-          component={Link}
-          to={item.path}
-          label={opened ? item.label : null}
-          leftSection={item.icon}
-          active={location.pathname === item.path}
-          style={{ borderRadius: rem(6), marginBottom: rem(4) }}
-        />
-      ))}
+    <ScrollArea p="md">
+      {isMobile && (
+        <Box mb="md" style={{ width: "100%" }}>
+          <SearchInputWithButton size="sm" style={{ width: "100%" }} />
+        </Box>
+      )}
+
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        return (
+          <NavLink
+            key={item.path}
+            component={Link}
+            to={item.path}
+            label={opened ? item.label : undefined}
+            leftSection={<Icon size={18} />}
+            active={location.pathname === item.path}
+            style={{
+              borderRadius: rem(6),
+              marginBottom: rem(4),
+              justifyContent: opened ? "flex-start" : "center",
+            }}
+          />
+        );
+      })}
     </ScrollArea>
   );
 }

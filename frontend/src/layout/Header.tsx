@@ -1,7 +1,17 @@
-import { Group, Burger, Menu, Avatar, Text, Image, Box } from "@mantine/core";
+import {
+  Group,
+  Burger,
+  Menu,
+  Avatar,
+  Text,
+  Image,
+  Box,
+  Flex,
+} from "@mantine/core";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo/logo-3.png";
-// import { SearchInputWithButton } from "../components/SearchInputWithButton";
+import { useMediaQuery } from "@mantine/hooks";
+import SearchInputWithButton from "../components/SearchInputWithButton";
 
 interface HeaderProps {
   opened: boolean;
@@ -9,23 +19,33 @@ interface HeaderProps {
 }
 
 export default function Header({ opened, toggle }: HeaderProps) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   return (
     <Group h="100%" px="md" justify="space-between">
-      <Box display='flex'>
+      {/* Left section: Burger + Search (search only if desktop) */}
+      <Flex align="center" gap="sm">
         <Burger opened={opened} onClick={toggle} size="sm" />
-
-      </Box>
+        {!isMobile && <SearchInputWithButton />}
+      </Flex>
 
       {/* Centered Logo */}
-      <Box>
-        <Image src={logo} alt="TrackKIT Logo" height={40} fit="contain" />
+      <Box style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+        <Image
+          src={logo}
+          alt="TrackKIT Logo"
+          height={40}
+          fit="contain"
+          style={{ cursor: "pointer" }}
+        />
       </Box>
 
+      {/* Right section: Profile menu */}
       <Menu shadow="md" width={200}>
         <Menu.Target>
           <Group gap="xs" style={{ cursor: "pointer" }}>
             <Avatar radius="xl" size={30} />
-            <Text fw={500}>John Doe</Text>
+            {!isMobile && <Text fw={500}>John Doe</Text>}
           </Group>
         </Menu.Target>
         <Menu.Dropdown>

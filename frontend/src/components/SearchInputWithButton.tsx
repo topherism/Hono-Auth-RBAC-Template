@@ -1,37 +1,27 @@
-// import { IconArrowRight, IconSearch } from "@tabler/icons-react";
-// import {
-//   ActionIcon,
-//   TextInput,
-//   TextInputProps,
-//   useMantineTheme,
-// } from "@mantine/core";
+import {IconSearch } from "@tabler/icons-react";
+import { ActionIcon, TextInput, useMantineTheme } from "@mantine/core";
+type InputProps = React.ComponentProps<typeof TextInput>;
 
-// export function SearchInputWithButton(props: TextInputProps) {
-//   const theme = useMantineTheme();
+export default function SearchInputWithButton(props: InputProps) {
+  const theme = useMantineTheme();
 
-//   return (
-//     <TextInput
-//       radius="xl"
-//       size="md"
-//       placeholder="Search questions"
-//       rightSectionWidth={42}
-//       leftSection={<IconSearch size={18} stroke={1.5} />}
-//       rightSection={
-//         <ActionIcon
-//           size={32}
-//           radius="xl"
-//           color={theme.primaryColor}
-//           variant="filled"
-//         >
-//           <IconArrowRight size={18} stroke={1.5} />
-//         </ActionIcon>
-//       }
-//       styles={{
-//         input: {
-//           paddingRight: 36, // avoids overlap with right icon
-//         },
-//       }}
-//       {...props}
-//     />
-//   );
-// }
+  return (
+    <TextInput
+      radius="xl"
+      size="md"
+      placeholder="Search questions"
+      rightSectionWidth={42}
+      rightSection={
+        <ActionIcon
+          size={32}
+          radius="xl"
+          color={theme.primaryColor}
+          variant="filled"
+        >
+          <IconSearch size={18} stroke={1.5} />
+        </ActionIcon>
+      }
+      {...props}
+    />
+  );
+}
