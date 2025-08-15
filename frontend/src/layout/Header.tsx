@@ -22,15 +22,27 @@ export default function Header({ opened, toggle }: HeaderProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
-    <Group h="100%" px="md" justify="space-between">
-      {/* Left section: Burger + Search (search only if desktop) */}
-      <Flex align="center" gap="sm">
+    <Flex
+      align="center"
+      justify="space-between"
+      px="md"
+      h="100%"
+      style={{ position: "relative" }}
+    >
+      {/* Left section: Burger + Search */}
+      <Flex align="center" gap="sm" style={{ flex: "0 0 auto" }}>
         <Burger opened={opened} onClick={toggle} size="sm" />
         {!isMobile && <SearchInputWithButton />}
       </Flex>
 
-      {/* Centered Logo */}
-      <Box style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+      {/* Center Logo - absolutely centered */}
+      <Box
+        style={{
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
         <Image
           src={logo}
           alt="TrackKIT Logo"
@@ -52,11 +64,11 @@ export default function Header({ opened, toggle }: HeaderProps) {
           <Menu.Item component={Link} to="/profile">
             Profile
           </Menu.Item>
-          <Menu.Item component={Link} to="/logout" color="red">
+          <Menu.Item component={Link} to="/" color="red">
             Logout
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-    </Group>
+    </Flex>
   );
 }

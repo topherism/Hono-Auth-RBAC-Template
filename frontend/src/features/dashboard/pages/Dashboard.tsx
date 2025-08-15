@@ -1,12 +1,18 @@
 // src/features/auth/pages/LoginPage.tsx
-import { Center, Paper, Title, Text, useMantineTheme, Container } from "@mantine/core";
+import {
+  Paper,
+  Title,
+  Text,
+  useMantineTheme,
+  Container,
+} from "@mantine/core";
 
 export default function LoginPage() {
   const theme = useMantineTheme();
 
   return (
-    <Container>
-      <Paper radius="md" p="xl" withBorder style={{ width: 360 }}>
+    <Container bg="brand">
+      <Paper radius="md" p="xl" withBorder style={{ justifyContent: "center" }}>
         <Title order={2} ta="center" mb="sm">
           TrackKIT
         </Title>
