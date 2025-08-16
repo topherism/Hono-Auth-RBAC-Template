@@ -7,7 +7,7 @@ export default function SearchInputWithButton(props: InputProps) {
 
   return (
     <TextInput
-      radius="xl"
+      radius="lg"
       size="md"
       placeholder="Search questions"
       rightSectionWidth={42}

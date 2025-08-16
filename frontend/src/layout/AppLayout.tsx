@@ -13,35 +13,48 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   // Auto-collapse on mobile, restore on desktop
   useEffect(() => {
-    if (isMobile) {
-      setOpened(false);
-    } else {
-      setOpened(true);
-    }
+    setOpened(!isMobile); // collapsed on mobile, expanded on desktop
   }, [isMobile]);
+  console.log(opened);
 
   return (
+    // AppLayout.tsx
     <AppShell
       padding={0}
       layout="default"
       navbar={{
-        width: opened ? expandedWidth : collapsedWidth,
+        width: isMobile
+          ? opened
+            ? "100%"
+            : 0 // mobile: full overlay vs hidden
+          : opened
+          ? expandedWidth
+          : collapsedWidth, // desktop: 220 ↔ 70
         breakpoint: "sm",
-        collapsed: { mobile: !opened, desktop: !opened },
       }}
       header={{ height: 60 }}
     >
-      {/* HEADER */}
       <AppShell.Header>
-        <Header opened={opened} toggle={() => setOpened(o => !o)} />
+        <Header opened={opened} toggle={() => setOpened((o) => !o)} />
       </AppShell.Header>
 
-      {/* SIDEBAR */}
-      <AppShell.Navbar>
-        <Sidebar opened={opened} />
+      <AppShell.Navbar
+        p={0}
+        style={{
+          // animate width on desktop; mobile uses show/hide
+         transition: "width 0.3s ease-in-out",
+          width: isMobile
+            ? opened
+              ? "100%"
+              : 0
+            : opened
+            ? expandedWidth
+            : collapsedWidth,
+        }}
+      >
+        <Sidebar opened={opened} onToggle={setOpened} />
       </AppShell.Navbar>
 
-      {/* MAIN */}
       <AppShell.Main style={{ background: "#f0f0f0" }}>
         {children}
       </AppShell.Main>

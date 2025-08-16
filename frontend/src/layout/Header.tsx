@@ -31,7 +31,7 @@ export default function Header({ opened, toggle }: HeaderProps) {
     >
       {/* Left section: Burger + Search */}
       <Flex align="center" gap="sm" style={{ flex: "0 0 auto" }}>
-        <Burger opened={opened} onClick={toggle} size="sm" />
+        {isMobile && <Burger opened={opened} onClick={toggle} size="sm" /> }
         {!isMobile && <SearchInputWithButton />}
       </Flex>
 
