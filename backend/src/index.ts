@@ -1,15 +1,11 @@
 import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import app from './app'
+import 'dotenv/config'
 
-const app = new Hono()
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const port = Number(process.env.PORT) || 3000
+console.log(`🚀 TrackKIT API running at http://localhost:${port}`)
 
 serve({
   fetch: app.fetch,
-  port: 3000
-}, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
+  port,
 })
