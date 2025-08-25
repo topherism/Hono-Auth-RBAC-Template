@@ -1,28 +1,24 @@
 {
   "compilerOptions": {
-    /* Defaults */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "ESNext",
-    "allowJs": true,
-    "checkJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
+    /* Language & Module */
+    "target": "ESNext",                   // Modern JS features
+    "module": "ESNext",                   // Use ES modules
+    "moduleResolution": "Bundler",        // Works well with Bun
+    "esModuleInterop": true,              // Allows default imports from CommonJS modules (e.g., Pino)
+    "resolveJsonModule": true,            // Import JSON files
+    "verbatimModuleSyntax": true,         // Preserve import syntax
+
+    /* Strictness & Safety */
+    "strict": true,                       // Enable strict type checking
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,     // Catch undefined accesses
+    "skipLibCheck": true,                 // Skip type checking for node_modules
 
-    /* Paths */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-
-    /* Bundling */
-    "moduleResolution": "Bundler",
-    "outDir": "./dist"
+    /* Project Structure */
+    "baseUrl": ".",                        // Root for path aliases
+    "paths": { "@/*": ["./src/*"] },      // Use @/ imports
+    "outDir": "./dist"                     // Compiled output
   },
-  "include": ["**/*.ts", ".eslintrc.json"],
-  "exclude": ["./node_modules", "./dist", "vitest.config.ts"]
+  "include": ["src/**/*.ts"],              // Only compile source files
+  "exclude": ["node_modules", "dist"]      // Exclude compiled files and dependencies
 }

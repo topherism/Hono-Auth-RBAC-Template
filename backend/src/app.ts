@@ -1,9 +1,15 @@
-import { Hono } from "hono";
-import authRoutes from "./routes/auth.routes";
+import { serve } from '@hono/node-server'
+import { Hono } from 'hono'
 
-const app = new Hono();
+const app = new Hono()
 
-app.get("/", (c) => c.text("Hello, TrackKIT 👋"));
-app.route("/auth", authRoutes);
+app.get('/', (c) => {
+  return c.text('Hello Hono!')
+})
 
-export default app;
+serve({
+  fetch: app.fetch,
+  port: 3000
+}, (info) => {
+  console.log(`Server is running on http://localhost:${info.port}`)
+})
