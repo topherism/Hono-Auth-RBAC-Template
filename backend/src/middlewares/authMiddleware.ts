@@ -12,7 +12,7 @@ export async function authMiddleware(c: Context, next: Next) {
     }
 
     const token = authHeader.split(" ")[1] || "";
-    const payload = await verifyToken(token, envConfig.JWT_ACCESS_TOKEN);
+    const payload = await verifyToken(token, envConfig.JWT_ACCESS_SECRET);
 
     if (!payload) {
       return sendError(c, ERROR_MESSAGES.UNAUTHORIZED);

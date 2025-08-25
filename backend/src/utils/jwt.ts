@@ -14,8 +14,8 @@ const ISSUER = "bun-hono-name";
 const AUDIENCE = "bun-hono-users";
 
 export const generateToken = async (userId: string) => {
-  const access_token_secret = process.env.JWT_ACCESS_TOKEN;
-  const refresh_token_secret = process.env.JWT_REFRESH_TOKEN;
+  const access_token_secret = process.env.JWT_ACCESS_SECRET;
+  const refresh_token_secret = process.env.JWT_REFRESH_SECRET;
 
   if (!access_token_secret || !refresh_token_secret) {
     throw new Error("JWT secrets are not set in environment variables");

@@ -14,8 +14,8 @@ const envSchema = z.object({
   STAGE: z.enum([STAGES.Dev, STAGES.Prod]).default(STAGES.Dev),
   // DB_URL: z.string(),
   // TEST_DB_URL: z.string(),
-  JWT_ACCESS_TOKEN: z.string(),
-  JWT_REFRESH_TOKEN: z.string(),
+  JWT_ACCESS_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
@@ -26,8 +26,8 @@ export const envConfig = envSchema.parse({
   STAGE: process.env.STAGE,
   // DB_URL: process.env.DB_URL,
   // TEST_DB_URL: process.env.TEST_DB_URL,
-  JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN,
-  JWT_REFRESH_TOKEN: process.env.JWT_REFRESH_TOKEN,
+  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   NODE_ENV: process.env.NODE_ENV,
 });
 
