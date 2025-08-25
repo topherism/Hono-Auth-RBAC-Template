@@ -4,7 +4,7 @@ import { ERROR_MESSAGES } from "../constants/errors";
 import  { sendError } from "../utils/response";
 import type { Context, Next } from "hono";
 
-export async function authMiddleware(c: Context, next: Next) {
+export async function authenticationMiddleware(c: Context, next: Next) {
   try {
     const authHeader = c.req.header("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

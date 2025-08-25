@@ -5,26 +5,29 @@ import {
   getUsersData,
   updateUserData,
 } from "@/data/user";
-import { NotFoundError } from "@/utils/errors";
+import {
+  ERROR_MESSAGES,
+  sendError,
+  sendSuccess,
+  SUCCESS_MESSAGES,
+} from "@/utils/response";
 import { Hono, type Context } from "hono";
-import { StatusCodes } from "http-status-codes";
 
 export function getUsersController(c: Context) {
   const users = getUsersData();
 
-  return c.json(users, StatusCodes.OK);
+  return sendSuccess(c, SUCCESS_MESSAGES.RESOURCE_FETCHED, users);
 }
-
 export function getUserController(c: Context) {
   const { id } = c.req.param();
 
   const user = getUserData(Number(id));
 
   if (!user) {
-    throw new NotFoundError("User not found");
+    return sendError(c, ERROR_MESSAGES.USER_NOT_FOUND);
   }
 
-  return c.json(user, StatusCodes.OK);
+  return sendSuccess(c, SUCCESS_MESSAGES.RESOURCE_FETCHED, user);
 }
 
 export async function createUserController(c: Context) {
@@ -32,7 +35,7 @@ export async function createUserController(c: Context) {
 
   const user = createUserData(body);
 
-  return c.json(user, StatusCodes.CREATED);
+  return sendSuccess(c, SUCCESS_MESSAGES.RESOURCE_CREATED, user);
 }
 
 export function deleteUserController(c: Context) {
@@ -40,7 +43,7 @@ export function deleteUserController(c: Context) {
 
   const deletedUser = deleteUserData(Number(id));
 
-  return c.json(deletedUser, StatusCodes.OK);
+  return sendSuccess(c, SUCCESS_MESSAGES.RESOURCE_DELETED, deletedUser);
 }
 
 export async function updateUserController(c: Context) {
@@ -49,5 +52,5 @@ export async function updateUserController(c: Context) {
 
   const updatedUser = updateUserData(Number(id), body);
 
-  return c.json(updatedUser, StatusCodes.OK);
+  return sendSuccess(c, SUCCESS_MESSAGES.RESOURCE_UPDATED, updatedUser);
 }

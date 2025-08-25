@@ -6,7 +6,7 @@ import {
   getUsersController,
   updateUserController,
 } from "./index.js";
-import { authenticationMiddleware } from "@/middlewares/authentication.js";
+import { authenticationMiddleware } from "@/middlewares/authentication.middleware";
 
 const routes = new Hono()
   .get("/users", authenticationMiddleware, getUsersController)
