@@ -4,12 +4,17 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.14.0",
     "dotenv": "^17.2.1",
     "hono": "^4.9.4",
+    "pg": "^8.16.3",
     "pino": "^9.9.0",
+    "prisma": "^6.14.0",
     "zod": "^4.1.1"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }

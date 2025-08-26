@@ -23,3 +23,4 @@
 COPY AND PASTE 
 bun add hono zod @hono/zod-validator dotenv pino
 bun add -d pino-pretty @types/bun
+bun add pg prisma @prisma/client

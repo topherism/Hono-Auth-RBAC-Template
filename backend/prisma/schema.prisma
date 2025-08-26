@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+//
+// //////////////////////////////
+// // Tenants / Organizations
+// //////////////////////////////
+// model Tenant {
+//   id      String  @id @default(uuid())
+//   name    String
+//   users   User[]
+// }
+
+//////////////////////////////
+// Users
+//////////////////////////////
+model User {
+  id              String       @id @default(uuid())
+  email           String       @unique
+  passwordHash    String
+  roles           UserRole[]
+  permissions     UserPermission[]        // extra/additional permissions beyond roles
+  deniedPermissions UserDeniedPermission[] // permissions explicitly denied
+  createdAt       DateTime     @default(now())
+}
+
+//////////////////////////////
+// Roles
+//////////////////////////////
+model Role {
+  id          Int             @id @default(autoincrement())
+  name        String          @unique
+  rolePerms   RolePermission[]  // default permissions of this role
+  userRoles   UserRole[]
+}
+
+//////////////////////////////
+// Permissions
+//////////////////////////////
+model Permission {
+  id           Int               @id @default(autoincrement())
+  name         String            @unique
+  rolePerms    RolePermission[]
+  userPerms    UserPermission[]
+  deniedPerms  UserDeniedPermission[]
+}
+
+//////////////////////////////
+// RolePermission (default permissions of a role)
+//////////////////////////////
+model RolePermission {
+  role         Role       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@id([roleId, permissionId])
+}
+
+//////////////////////////////
+// UserRole (users can have multiple roles)
+//////////////////////////////
+model UserRole {
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@id([userId, roleId])
+}
+
+//////////////////////////////
+// UserPermission (additional permissions beyond role)
+//////////////////////////////
+model UserPermission {
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@id([userId, permissionId])
+}
+
+//////////////////////////////
+// UserDeniedPermission (to remove/deny permission from role)
+//////////////////////////////
+model UserDeniedPermission {
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@id([userId, permissionId])
+}
