@@ -1,24 +1,26 @@
 {
   "compilerOptions": {
     /* Language & Module */
-    "target": "ESNext",                   // Modern JS features
-    "module": "ESNext",                   // Use ES modules
-    "moduleResolution": "Bundler",        // Works well with Bun
-    "esModuleInterop": true,              // Allows default imports from CommonJS modules (e.g., Pino)
-    "resolveJsonModule": true,            // Import JSON files
-    "verbatimModuleSyntax": true,         // Preserve import syntax
+    "target": "ES2022",                   // Node 18+ supports this natively
+    "module": "ESNext",                   // Keep modern modules
+    "moduleResolution": "Bundler",        // Bun + ESM friendly
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
 
     /* Strictness & Safety */
-    "strict": true,                       // Enable strict type checking
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true,     // Catch undefined accesses
-    "skipLibCheck": true,                 // Skip type checking for node_modules
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
 
     /* Project Structure */
-    "baseUrl": ".",                        // Root for path aliases
-    "paths": { "@/*": ["./src/*"] },      // Use @/ imports
-    "outDir": "./dist"                     // Compiled output
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
+    "outDir": "./dist",                    // Output for Node build
+    // "allowImportingTsExtensions": true,    // So Bun can import .ts in dev
+    "moduleDetection": "force"             // Make sure ESM is always respected
   },
-  "include": ["src/**/*.ts"],              // Only compile source files
-  "exclude": ["node_modules", "dist"]      // Exclude compiled files and dependencies
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -31,7 +30,8 @@ datasource db {
 model User {
   id              String       @id @default(uuid())
   email           String       @unique
-  passwordHash    String
+  username        String?      @unique
+  password    String
   roles           UserRole[]
   permissions     UserPermission[]        // extra/additional permissions beyond roles
   deniedPermissions UserDeniedPermission[] // permissions explicitly denied

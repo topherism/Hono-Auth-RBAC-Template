@@ -1,22 +1,21 @@
-// import { serve } from '@hono/node-server'
-// import { Hono } from 'hono'
-// import { routes } from './controllers/routes'
-// import { sendSuccess, SUCCESS_MESSAGES } from './utils/response';
-// import { envConfig } from './env';
 
-// const app = new Hono()
+import { Hono } from "hono"
+import authRoutes from "@/routes/auth.routes"
+// import usersRoutes from "@/routes/users.routes"
+// import inventoryRoutes from "@/routes/inventory.routes"
+import { sendSuccess, SUCCESS_MESSAGES } from "@/utils/response"
 
-// app.get("/api/ping", (c) => {
-//   return sendSuccess(c, SUCCESS_MESSAGES.HEALTH_CHECK);
-// });
+const app = new Hono()
 
-// routes.forEach((route) => {
-//   app.route("/api", route);
-// });
+// Health check
+app.get("/api/ping", (c) => {
+  return sendSuccess(c, SUCCESS_MESSAGES.HEALTH_CHECK)
+})
 
-// serve({
-//   fetch: app.fetch,
-//   port: envConfig.APP_PORT
-// }, (info) => {
-//   console.log(`Server is running on http://localhost:${info.port}`)
-// })
+// Mount routes
+app.route("/api", authRoutes)
+// app.route("/api", usersRoutes)
+// app.route("/api", inventoryRoutes)
+
+export default app
+
