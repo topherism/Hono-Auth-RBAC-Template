@@ -6,10 +6,11 @@ export const AuthRepository = {
     return prisma.user.findUnique({ where: { email } });
   },
 
-  async findUserByUsername(username: string): Promise<User | null> {
+  async findUserByUsername(username?: string): Promise<User | null> {
+    if (!username) return null;
     return prisma.user.findUnique({ where: { username } });
   },
-
+  
   async createUser(
     email: string,
     password: string,

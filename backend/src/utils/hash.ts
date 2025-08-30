@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export class BcryptHelper {
   // Number of salt rounds; 10–12 is standard for modern apps

@@ -1,0 +1,11 @@
+GET http://localhost:3000/api/ping
+
+###
+
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "michelle1@test.com",
+    "password": "password123"
+}

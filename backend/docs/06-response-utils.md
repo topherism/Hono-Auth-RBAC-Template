@@ -1,3 +1,6 @@
+![alt text](image.png)
+
+
 # Response Utilities
 
 This file explains the standardized API response functions in `src/utils/response.ts`.  

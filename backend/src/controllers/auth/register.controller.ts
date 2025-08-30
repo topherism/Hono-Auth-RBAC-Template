@@ -1,4 +1,5 @@
 import type { Context } from "hono";
+import type { z } from "zod";
 import {
   sendSuccess,
   sendError,
@@ -6,22 +7,26 @@ import {
   SUCCESS_MESSAGES,
 } from "@/utils/response";
 import { AuthService } from "@/services/auth.service";
+import { RegisterSchema } from "@/schemas/auth.schema";
+
+type RegisterInput = z.infer<typeof RegisterSchema>;
 
 export async function register(c: Context) {
   try {
-    const { email, username, password } = await c.req.json();
+    // ✅ Type-safe now
+    const { email, username, password } = c.req.valid("json") as RegisterInput;
 
-    if (!email || !password) {
-      return sendError(
-        c,
-        ERROR_MESSAGES.BAD_REQUEST,
-        undefined,
-        "Email and password are required"
-      );
-    }
-    // Call the service to register the user
-    const user = await AuthService.register(email, password, username);
+    const result = await AuthService.register(email, password, username);
 
-    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, { user });
-  } catch (error) {}
+    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, {
+      user: result,
+    });
+  } catch (error: any) {
+    return sendError(
+      c,
+      ERROR_MESSAGES.INTERNAL_ERROR,
+      undefined,
+      error.message ?? "Something went wrong"
+    );
+  }
 }

@@ -14,5 +14,5 @@ const routes = new Hono()
   .get("/users/:id", authenticationMiddleware, getUserController)
   .delete("/users/:id", authenticationMiddleware, deleteUserController)
   .put("/users/:id", authenticationMiddleware, updateUserController);
-
+  
 export default routes;

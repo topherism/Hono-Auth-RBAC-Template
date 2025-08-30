@@ -1,9 +1,14 @@
-import { Hono } from "hono"
-// import * as authController from "@/controllers/auth/auth.controller"
+import { Hono } from "hono";
+import { registerValidator } from "@/schemas/auth.schema";
+import { register } from "@/controllers/auth/register.controller";
 
-const authRoutes = new Hono()
-//   .post("/auth/login", authController.login)
-//   .post("/auth/register", authController.register)
-//   .post("/auth/refresh", authController.refreshToken)
+const authRoutes = new Hono().post(
+  "/auth/register",
+  registerValidator, // ✅ runs schema validation first
+  register
+);
 
-export default authRoutes
+// .post("/auth/login", authController.login)
+// .post("/auth/refresh", authController.refreshToken)
+
+export default authRoutes;

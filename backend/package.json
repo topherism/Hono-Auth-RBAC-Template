@@ -1,19 +1,21 @@
 {
   "name": "backend",
   "scripts": {
-    "dev": "bun run --hot src/server.bun.ts",
-    "start:bun": "bun run src/server.bun.ts",
+    "dev": "bun run --hot src/server.ts",
     "build": "tsc",
-    "start:node": "node dist/server.node.js"
+    "start": "bun run dist/server.js",
+    "start:node": "node dist/server.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.0",
+    "@hono/zod-validator": "^0.7.2",
     "@prisma/client": "^6.14.0",
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
     "hono": "^4.9.4",
     "pg": "^8.16.3",
     "pino": "^9.9.0",
+    "pino-pretty": "^13.1.1",
     "prisma": "^6.14.0",
     "zod": "^4.1.1"
   },

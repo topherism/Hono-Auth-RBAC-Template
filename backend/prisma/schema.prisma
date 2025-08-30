@@ -6,13 +6,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 //
 // //////////////////////////////
@@ -28,35 +28,35 @@ datasource db {
 // Users
 //////////////////////////////
 model User {
-  id              String       @id @default(uuid())
-  email           String       @unique
-  username        String?      @unique
-  password    String
-  roles           UserRole[]
-  permissions     UserPermission[]        // extra/additional permissions beyond roles
+  id                String                 @id @default(uuid())
+  email             String                 @unique
+  username          String?                @unique
+  password          String
+  roles             UserRole[]
+  permissions       UserPermission[] // extra/additional permissions beyond roles
   deniedPermissions UserDeniedPermission[] // permissions explicitly denied
-  createdAt       DateTime     @default(now())
+  createdAt         DateTime               @default(now())
 }
 
 //////////////////////////////
 // Roles
 //////////////////////////////
 model Role {
-  id          Int             @id @default(autoincrement())
-  name        String          @unique
-  rolePerms   RolePermission[]  // default permissions of this role
-  userRoles   UserRole[]
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  rolePerms RolePermission[] // default permissions of this role
+  userRoles UserRole[]
 }
 
 //////////////////////////////
 // Permissions
 //////////////////////////////
 model Permission {
-  id           Int               @id @default(autoincrement())
-  name         String            @unique
-  rolePerms    RolePermission[]
-  userPerms    UserPermission[]
-  deniedPerms  UserDeniedPermission[]
+  id          Int                    @id @default(autoincrement())
+  name        String                 @unique
+  rolePerms   RolePermission[]
+  userPerms   UserPermission[]
+  deniedPerms UserDeniedPermission[]
 }
 
 //////////////////////////////
@@ -75,9 +75,9 @@ model RolePermission {
 // UserRole (users can have multiple roles)
 //////////////////////////////
 model UserRole {
-  user   User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
-  role   Role @relation(fields: [roleId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
   roleId Int
 
   @@id([userId, roleId])

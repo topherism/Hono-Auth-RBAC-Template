@@ -6,7 +6,7 @@
     "moduleResolution": "Bundler",        // Bun + ESM friendly
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
 
     /* Strictness & Safety */
     "strict": true,
