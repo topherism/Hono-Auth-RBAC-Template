@@ -7,26 +7,24 @@ import {
   SUCCESS_MESSAGES,
 } from "@/utils/response";
 import { AuthService } from "@/services/auth.service";
-import { RegisterSchema } from "@/schemas/auth.schema";
 
-type RegisterInput = z.infer<typeof RegisterSchema>;
 
 export async function register(c: Context) {
-  try {
-    // ✅ Type-safe now
-    const { email, username, password } = c.req.valid("json") as RegisterInput;
+  // try {
+  //   // ✅ Type-safe now
+  //   const { email, username, password } = c.req.valid("json") as RegisterInput;
 
-    const result = await AuthService.register(email, password, username);
+  //   const result = await AuthService.register(email, password, username);
 
-    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, {
-      user: result,
-    });
-  } catch (error: any) {
-    return sendError(
-      c,
-      ERROR_MESSAGES.INTERNAL_ERROR,
-      undefined,
-      error.message ?? "Something went wrong"
-    );
-  }
+  //   return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, {
+  //     user: result,
+  //   });
+  // } catch (error: any) {
+  //   return sendError(
+  //     c,
+  //     ERROR_MESSAGES.INTERNAL_ERROR,
+  //     undefined,
+  //     error.message ?? "Something went wrong"
+  //   );
+  // }
 }

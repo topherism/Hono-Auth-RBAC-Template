@@ -14,7 +14,7 @@ export async function login(c: Context) {
         };
 
         // Call the service to login the user
-        const user = await AuthService.login(emailOrUsername, password);
+        // const user = await AuthService.login(emailOrUsername, password);
 
 
         return sendSuccess(c, SUCCESS_MESSAGES.LOGIN_SUCCESSFUL)
