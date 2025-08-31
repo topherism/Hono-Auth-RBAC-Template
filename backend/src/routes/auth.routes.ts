@@ -1,14 +1,31 @@
 import { Hono } from "hono";
 import { registerValidator } from "@/schemas/auth.schema";
-import { register } from "@/controllers/auth/register.controller";
+import {
+  sendSuccess,
+  sendError,
+  ERROR_MESSAGES,
+  SUCCESS_MESSAGES,
+} from "@/utils/response";
+import { AuthService } from "@/services/auth.service";
+const authRoute = new Hono();
 
-const authRoutes = new Hono().post(
-  "/auth/register",
-  registerValidator, // ✅ runs schema validation first
-  register
-);
+authRoute.post("/register", registerValidator, async (c) => {
+  try {
+    const { email, username, password } = c.req.valid("json");
 
-// .post("/auth/login", authController.login)
-// .post("/auth/refresh", authController.refreshToken)
+    const result = await AuthService.register(email, password, username);
 
-export default authRoutes;
+    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, {
+      user: result,
+    });
+  } catch (error: any) {
+    return sendError(
+      c,
+      ERROR_MESSAGES.INTERNAL_ERROR,
+      undefined,
+      error.message ?? "Something went wrong"
+    );
+  }
+});
+
+export default authRoute;

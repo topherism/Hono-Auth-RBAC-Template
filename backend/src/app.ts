@@ -35,7 +35,7 @@ app.get("/api/ping", (c) => {
 });
 
 // Mount routes
-app.route("/api", authRoutes);
+app.route("/api/auth", authRoutes);
 // app.route("/api", usersRoutes)
 // app.route("/api", inventoryRoutes)
 
