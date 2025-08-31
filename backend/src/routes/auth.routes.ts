@@ -7,17 +7,27 @@ import {
   SUCCESS_MESSAGES,
 } from "@/utils/response";
 import { AuthService } from "@/services/auth.service";
-const authRoute = new Hono();
 
-authRoute.post("/register", registerValidator, async (c) => {
+const authRoute = new Hono().post("/register", registerValidator, async (c) => {
   try {
     const { email, username, password } = c.req.valid("json");
+    // ✅ Expected business errors
+    if (await AuthService.findByEmail(email)) {
+      return sendError(c, ERROR_MESSAGES.EMAIL_ALREADY_EXISTS);
+    }
 
-    const result = await AuthService.register(email, password, username);
+    if (username && (await AuthService.findByUsername(username))) {
+      return sendError(
+        c,
+        ERROR_MESSAGES.BAD_REQUEST,
+        [],
+        "Username already exists"
+      );
+    } // ✅ Create user
+    
+    const user = await AuthService.register(email, password, username);
 
-    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, {
-      user: result,
-    });
+    return sendSuccess(c, SUCCESS_MESSAGES.USER_REGISTERED, { user });
   } catch (error: any) {
     return sendError(
       c,
@@ -27,5 +37,7 @@ authRoute.post("/register", registerValidator, async (c) => {
     );
   }
 });
+// .login("/login", async (c) => {
+// })
 
 export default authRoute;
