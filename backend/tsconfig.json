@@ -1,26 +1,23 @@
 {
   "compilerOptions": {
-    /* Language & Module */
-    "target": "ES2022",                   // Node 18+ supports this natively
-    "module": "ESNext",                   // Keep modern modules
-    "moduleResolution": "Bundler",        // Bun + ESM friendly
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": false,
-
-    /* Strictness & Safety */
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "baseUrl": "./src",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "typeRoots": ["./node_modules/@types"],
+    "types": [
+      "node"
+    ],
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true,
-    "skipLibCheck": true,
-
-    /* Project Structure */
-    "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"] },
-    "outDir": "./dist",                    // Output for Node build
-    // "allowImportingTsExtensions": true,    // So Bun can import .ts in dev
-    "moduleDetection": "force"             // Make sure ESM is always respected
+    "outDir": "./dist",
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
 }

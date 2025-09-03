@@ -1,34 +1,44 @@
+import { z, ZodError } from "zod";
 import { config } from "dotenv";
-import { z } from "zod";
-import { STAGES } from "./constants/env";
+import { expand } from "dotenv-expand";
+import path from "path";
 
-config(); // loads .env into process.env
+expand(
+  config({
+    path: path.resolve(
+      process.cwd(),
+      process.env.NODE_ENV === "test" ? ".env.test" : ".env"
+    ),
+  })
+);
+// Load and expand environment variables from .env file
+const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  LOG_LEVEL: z.enum([
+    "fatal",
+    "error",
+    "warn",
+    "info",
+    "debug",
+    "trace",
+    "silent",
+  ]),
+  PORT: z.coerce.number().default(9999),
+  DATABASE_URL: z.string().url(),
+});
 
-export function isTest() {
-  return process.env.NODE_ENV === "test";
+export type Env = z.infer<typeof envSchema>;
+
+let envConfig: Env;
+try {
+  envConfig = envSchema.parse(process.env);
+} catch (e) {
+  const error = e as ZodError;
+  console.error("❌ Invalid environment variables:");
+  console.error(error.flatten().fieldErrors);
+  process.exit(1);
 }
 
-const envSchema = z.object({
-  APP_PORT: z.coerce.number().default(3000),
-  // ✅ fixed: use z.enum for literal object values
-  STAGE: z.enum([STAGES.Dev, STAGES.Prod]).default(STAGES.Dev),
-  // DB_URL: z.string(),
-  // TEST_DB_URL: z.string(),
-  JWT_ACCESS_SECRET: z.string(),
-  JWT_REFRESH_SECRET: z.string(),
-  NODE_ENV: z
-    .enum(["development", "test", "production"])
-    .default("development"),
-});
-
-export const envConfig = envSchema.parse({
-  APP_PORT: process.env.APP_PORT,
-  STAGE: process.env.STAGE,
-  // DB_URL: process.env.DB_URL,
-  // TEST_DB_URL: process.env.TEST_DB_URL,
-  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-  NODE_ENV: process.env.NODE_ENV,
-});
-
-export type EnvConfig = z.infer<typeof envSchema>;
+export default envConfig;

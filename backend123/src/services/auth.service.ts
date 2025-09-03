@@ -15,4 +15,13 @@ export const AuthService = {
     const hashedPassword = await BcryptHelper.hash(password);
     return AuthRepository.createUser(email, hashedPassword, username);
   },
+
+  async verifyPassword(plainText: string, hashed: string) {
+    return BcryptHelper.verify(plainText, hashed);
+  },
+
+  async insertRefreshToken(userId: string, expiresAt: Date, jti: string) {
+    return AuthRepository.createRefreshToken(userId, expiresAt, jti);
+  } 
+
 };

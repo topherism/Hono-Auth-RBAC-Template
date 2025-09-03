@@ -1,6 +1,4 @@
-// lib/prisma.ts
-
-import envConfig from "@/env"
+import { envConfig } from "@/env"
 import { PrismaClient } from "@prisma/client"
 
 const globalForPrisma = globalThis as unknown as {

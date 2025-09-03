@@ -57,6 +57,17 @@ CREATE TABLE "public"."UserDeniedPermission" (
     CONSTRAINT "UserDeniedPermission_pkey" PRIMARY KEY ("userId","permissionId")
 );
 
+-- CreateTable
+CREATE TABLE "public"."RefreshToken" (
+    "jti" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "revokedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("jti")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
@@ -68,6 +79,9 @@ CREATE UNIQUE INDEX "Role_name_key" ON "public"."Role"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Permission_name_key" ON "public"."Permission"("name");
+
+-- CreateIndex
+CREATE INDEX "RefreshToken_userId_idx" ON "public"."RefreshToken"("userId");
 
 -- AddForeignKey
 ALTER TABLE "public"."RolePermission" ADD CONSTRAINT "RolePermission_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "public"."Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -92,3 +106,6 @@ ALTER TABLE "public"."UserDeniedPermission" ADD CONSTRAINT "UserDeniedPermission
 
 -- AddForeignKey
 ALTER TABLE "public"."UserDeniedPermission" ADD CONSTRAINT "UserDeniedPermission_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "public"."Permission"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

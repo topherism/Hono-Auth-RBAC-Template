@@ -1,15 +1,13 @@
-import { Hono } from "hono";
-import { routes } from "./controllers/routes";
-import { sendSuccess, SUCCESS_MESSAGES } from "./utils/response";
+import { serve } from "@hono/node-server";
+import app from "./app";
+import envConfig from "./env";
 
-const app = new Hono();
+const port = Number(envConfig.PORT) || 3000;
 
-app.get("/api/ping", (c) => {
-  return sendSuccess(c, SUCCESS_MESSAGES.HEALTH_CHECK);
+console.log(`Server is running on port http://localhost:${port}`);
+console.log(`📖 Docs available at http://localhost:${port}/scalar`);
+
+serve({
+  fetch: app.fetch,
+  port,
 });
-
-routes.forEach((route) => {
-  app.route("/api", route);
-});
-
-export default app;

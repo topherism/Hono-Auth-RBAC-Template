@@ -158,6 +158,30 @@ app.get("/users/:id", async (c) => {
 - Logs errors with Pino.
 - Differentiates between predefined and unexpected errors.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 ## 8️⃣ Logger
