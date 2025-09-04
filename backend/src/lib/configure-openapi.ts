@@ -7,13 +7,15 @@ import { Scalar } from "@scalar/hono-api-reference";
 import envConfig from "@/env";
 
 export default function configureOpenAPI(app: AppOpenAPI) {
+
   app.doc("/doc", {
     openapi: "3.0.0",
     info: {
       version: packageJSON.version,
-      title: "Tasks API",
+      title: "TrackKIT API",
     },
   });
+
   app.get(
     "/scalar",
     Scalar((c) => {
@@ -29,12 +31,4 @@ export default function configureOpenAPI(app: AppOpenAPI) {
       };
     })
   );
-  //   app.get(
-  //     "/scalar",
-  //     Scalar({
-  //       url: "/doc",
-  //       theme: "kepler",
-  //       pageTitle: "Awesome API",
-  //     })
-  //   );
 }

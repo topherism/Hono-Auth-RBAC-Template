@@ -2,11 +2,12 @@
 
 import { createRouter } from "@/lib/create-app";
 
-// import * as handlers from "./tasks.handlers";
-// import * as routes from "./tasks.routes";
+import * as handlers from "./auth.handlers";
+import * as routes from "./auth.routes";
 
 const router = createRouter()
-//   .openapi(routes.list, handlers.list)
+  .openapi(routes.login, handlers.login)
+  .openapi(routes.register, handlers.register)
 //   .openapi(routes.create, handlers.create)
 //   .openapi(routes.getOneList, handlers.getOneList)
 //   .openapi(routes.patch, handlers.patch)
