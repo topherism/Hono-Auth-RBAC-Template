@@ -7,25 +7,31 @@ extendZodWithOpenApi(z);
 // ✅ Auth Register Schema
 export const RegisterSchema = z
   .object({
-    email: z
-      .string()
-      .email({ message: "Invalid email format" })
-      .openapi({
-        example: "user@example.com",
-        description: "Valid email address",
-      }),
+    email: z.string().email({ message: "Invalid email format" }).openapi({
+      example: "user@example.com",
+      description: "Valid email address",
+    }),
     username: z
       .string()
       .min(3, { message: "Username must be at least 3 characters" })
       .max(30, { message: "Username must not exceed 30 characters" })
       .optional()
       .openapi({
-        example: "john_doe",
+        example: "topher_m",
         description: "Unique username (optional)",
       }),
+    first_name: z.string().openapi({
+      example: "Christopher",
+    }),
+    middle_name: z.string().openapi({
+      example: "Sarmiento",
+    }),
+    last_name: z.string().openapi({
+      example: "Manubay",
+    }),
     password: z
       .string()
-      .min(10, { message: "Password must be at least 10 characters long." })
+      .min(6, { message: "Password must be at least 6 characters long." })
       .max(100, { message: "Password must not exceed 100 characters" })
       .openapi({ example: "MyS3cureP@ssw0rd", description: "Secure password" }),
   })
@@ -52,18 +58,14 @@ export const LoginSchema = z
 // ✅ Auth Response Schema
 export const AuthResponseSchema = z
   .object({
-    accessToken: z
-      .string()
-      .openapi({
-        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-        description: "JWT access token",
-      }),
-    refreshToken: z
-      .string()
-      .openapi({
-        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-        description: "JWT refresh token",
-      }),
+    accessToken: z.string().openapi({
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      description: "JWT access token",
+    }),
+    refreshToken: z.string().openapi({
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      description: "JWT refresh token",
+    }),
   })
   .openapi("AuthResponseSchema");
 

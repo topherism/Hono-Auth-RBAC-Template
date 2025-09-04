@@ -6,6 +6,10 @@ import {
   RegisterSchema,
   AuthResponseSchema,
 } from "@/schemas/auth.schema";
+import {
+  createErrorSchema,
+  createMessageObjectSchema,
+} from "stoker/openapi/schemas";
 
 const tags = ["Auth"];
 
@@ -42,12 +46,14 @@ export const register = createRoute({
       AuthResponseSchema,
       "Register success"
     ),
-    [HttpStatusCodes.CONFLICT]: {
-      description: "Email or username already exists",
-    },
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
-      description: "Validation error",
-    },
+    [HttpStatusCodes.CONFLICT]: jsonContent(
+      createMessageObjectSchema("Email or username already exists"),
+      "Email or username already exists"
+    ),
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(RegisterSchema),
+      "The validation error(s)"
+    ),
   },
 });
 

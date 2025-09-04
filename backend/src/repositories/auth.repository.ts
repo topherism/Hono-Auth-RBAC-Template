@@ -21,6 +21,7 @@ export const AuthRepository = {
       data: { email, password, username },
     });
   },
+
   async createRefreshToken(userId: string, expiresAt: Date, jti: string) {
     return prisma.refreshToken.create({
       data: { jti, userId, expiresAt },

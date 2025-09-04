@@ -3,8 +3,7 @@
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { LoginRoute, RegisterRoute } from "./auth.routes";
-import { AuthService } from "@/services/auth.service";
+import { LoginRoute, RegisterRoute } from "./users.routes";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
@@ -15,14 +14,11 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
 
 export const register: AppRouteHandler<RegisterRoute> = async (c) => {
   const { email, username, password } = c.req.valid("json");
-
-  if (await AuthService.findByEmail(email)) {
-    return c.json(HttpStatusCodes.CONFLICT);
-  }
   //   const task =
 
   return c.json(HttpStatusCodes.CREATED);
 };
+
 
 // export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 //   const { id } = c.req.valid("param");

@@ -18,11 +18,20 @@ model User {
   email             String                 @unique
   username          String?                @unique
   password          String
+  createdAt         DateTime               @default(now())
   roles             UserRole[]
   permissions       UserPermission[] // extra/additional permissions beyond roles
   deniedPermissions UserDeniedPermission[] // permissions explicitly denied
-  refreshTokens     RefreshToken[]   
-  createdAt         DateTime               @default(now())
+  refreshTokens     RefreshToken[]
+  UserInfo          UserInfo[]
+}
+
+model UserInfo {
+  userId      String  @id
+  user        User    @relation(fields: [userId], references: [id])
+  first_name  String
+  middle_name String?
+  last_name   String
 }
 
 //////////////////////////////
@@ -95,11 +104,11 @@ model UserDeniedPermission {
 }
 
 model RefreshToken {
-  jti       String   @id             // store JTI here
-  user      User     @relation(fields: [userId], references: [id])
+  jti       String    @id // store JTI here
+  user      User      @relation(fields: [userId], references: [id])
   userId    String
   revokedAt DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   expiresAt DateTime
 
   @@index([userId])
