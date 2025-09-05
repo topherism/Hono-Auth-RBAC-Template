@@ -3,22 +3,28 @@
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { LoginRoute, RegisterRoute } from "./users.routes";
+import { CreateUserRoute } from "./users.routes";
+import { UserService } from "@/services/user.service";
 
-export const login: AppRouteHandler<LoginRoute> = async (c) => {
-  const { emailOrUsername, password } = c.req.valid("json");
-  //   const task =
+export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
+  try {
+    const input = c.req.valid("json");
+    const user = await UserService.createUser(input);
+    return c.json(user, HttpStatusCodes.CREATED);
+  } catch (err: any) {
+    if (err.code === "EMAIL_EXISTS") {
+      return c.json({ message: "Email already in use" }, HttpStatusCodes.CONFLICT);
+    }
+    if (err.code === "USERNAME_EXISTS") {
+      return c.json({ message: "Username already in use" }, HttpStatusCodes.CONFLICT);
+    }
 
-  return c.json(HttpStatusCodes.OK);
+    return c.json(
+      { message: err.message ?? HttpStatusPhrases.INTERNAL_SERVER_ERROR },
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
 };
-
-export const register: AppRouteHandler<RegisterRoute> = async (c) => {
-  const { email, username, password } = c.req.valid("json");
-  //   const task =
-
-  return c.json(HttpStatusCodes.CREATED);
-};
-
 
 // export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 //   const { id } = c.req.valid("param");

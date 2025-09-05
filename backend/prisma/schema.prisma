@@ -14,24 +14,28 @@ datasource db {
 }
 
 model User {
-  id                String                 @id @default(uuid())
-  email             String                 @unique
-  username          String?                @unique
-  password          String
-  createdAt         DateTime               @default(now())
-  roles             UserRole[]
-  permissions       UserPermission[] // extra/additional permissions beyond roles
-  deniedPermissions UserDeniedPermission[] // permissions explicitly denied
-  refreshTokens     RefreshToken[]
-  UserInfo          UserInfo[]
+  id        String   @id @default(uuid()) // PK
+  email     String   @unique // unique email
+  username  String?  @unique // optional, unique if set
+  password  String // hashed password
+  createdAt DateTime @default(now()) @map("create_at")
+
+  // Relations
+  roles             UserRole[] // many roles
+  permissions       UserPermission[] // many permissions
+  deniedPermissions UserDeniedPermission[] // many denied perms
+  refreshTokens     RefreshToken[] // many sessions
+
+  userInfo UserInfo? // 1:1 optional profile
 }
 
 model UserInfo {
-  userId      String  @id
-  user        User    @relation(fields: [userId], references: [id])
-  first_name  String
-  middle_name String?
-  last_name   String
+  userId String @id // PK = FK to User.id
+  user   User   @relation(fields: [userId], references: [id]) // belongs to one User
+
+  firstName  String  @map("first_name")
+  middleName String? @map("middle_name")
+  lastName   String  @map("last_name")
 }
 
 //////////////////////////////
@@ -107,9 +111,9 @@ model RefreshToken {
   jti       String    @id // store JTI here
   user      User      @relation(fields: [userId], references: [id])
   userId    String
-  revokedAt DateTime?
-  createdAt DateTime  @default(now())
-  expiresAt DateTime
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  expiresAt DateTime  @map("expires_at")
 
   @@index([userId])
 }

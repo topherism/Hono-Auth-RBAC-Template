@@ -5,41 +5,28 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 import { LoginRoute, RegisterRoute } from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
+import { UserService } from "@/services/user.service";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
   //   const task =
+  // const result = await UserService.findByEmailOrUsername(emailOrUsername);
 
-  return c.json(HttpStatusCodes.OK);
+  return c.json(
+    {
+      accessToken: "fake_access_token",
+      refreshToken: "fake_refresh_token",
+    },
+    HttpStatusCodes.OK
+  );
 };
 
-export const register: AppRouteHandler<RegisterRoute> = async (c) => {
-  const { email, username, password } = c.req.valid("json");
+// export const register: AppRouteHandler<RegisterRoute> = async (c) => {
+//   const { email, username, password, first_name, middle_name, last_name } =
+//     c.req.valid("json");
 
-  if (await AuthService.findByEmail(email)) {
-    return c.json(HttpStatusCodes.CONFLICT);
-  }
-  //   const task =
+  
+//   //   //   const task =
 
-  return c.json(HttpStatusCodes.CREATED);
-};
-
-// export const patch: AppRouteHandler<PatchRoute> = async (c) => {
-//   const { id } = c.req.valid("param");
-//   const updates = c.req.valid("json");
-//   const [task] = await db
-//     .update(tasks)
-//     .set(updates)
-//     .where(eq(tasks.id, id))
-//     .returning();
-
-//   if (!task) {
-//     return c.json(
-//       {
-//         message: HttpStatusPhrases.NOT_FOUND,
-//       },
-//       HttpStatusCodes.NOT_FOUND
-//     );
-//   }
-//   return c.json(task, HttpStatusCodes.OK);
+//   //   return c.json(HttpStatusCodes.CREATED);
 // };
