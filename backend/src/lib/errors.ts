@@ -1,11 +1,13 @@
-// src/lib/errors.ts
+// errors.ts
 export class AppError extends Error {
-  constructor(
-    public message: string,
-    public status: number,
-    public code?: string
-  ) {
+  statusCode: number; // keep number
+
+  constructor(statusCode: number, message: string) {
     super(message);
-    this.name = this.constructor.name;
+    this.statusCode = statusCode;
+  }
+
+  toResponse() {
+    return {message: this.message };
   }
 }

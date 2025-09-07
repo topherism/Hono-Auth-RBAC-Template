@@ -1,11 +1,12 @@
 // lib/create-app.ts
 
-
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { notFound, onError, serveEmojiFavicon } from "stoker/middlewares";
 import { pinoLogger } from "@/middlewares/pino-logger";
 import { AppBindings, AppOpenAPI } from "./types";
 import { defaultHook } from "stoker/openapi";
+import { AppError } from "./errors";
+import { StatusCode } from "hono/utils/http-status";
 
 export function createRouter() {
   return new OpenAPIHono<AppBindings>({ strict: false, defaultHook });
@@ -17,7 +18,13 @@ export default function createApp() {
   app.use(pinoLogger());
 
   app.notFound(notFound);
-  app.onError(onError);
+  app.onError((err, c) => {
+    if (err instanceof AppError) {
+      return c.json(err.toResponse(), err.statusCode as any);
+    }
+    return c.json({ message: "Internal Server Error" }, 500);
+  });
+
   return app;
 }
 

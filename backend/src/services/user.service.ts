@@ -2,6 +2,9 @@
 import { UserRepository } from "@/repositories/user.repository";
 import { CreateUserInput } from "@/schemas/users";
 import { BcryptHelper } from "@/utils/hash";
+import { AppError } from "@/lib/errors";
+import * as HttpStatusCodes from "stoker/http-status-codes";
+import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
 export const UserService = {
   // async findByEmail(email: string) {
@@ -17,9 +20,7 @@ export const UserService = {
     // Check email
     const existingEmail = await UserRepository.findUserByEmail(input.email);
     if (existingEmail) {
-      const err = new Error("Email already in use");
-      (err as any).code = "EMAIL_EXISTS";
-      throw err;
+      throw new AppError(HttpStatusCodes.CONFLICT, "Email already in use");
     }
 
     // Check username (if provided)
@@ -28,9 +29,7 @@ export const UserService = {
         input.username
       );
       if (existingUsername) {
-        const err = new Error("Username already in use");
-        (err as any).code = "USERNAME_EXISTS";
-        throw err;
+        throw new AppError(HttpStatusCodes.CONFLICT, "Username already in use");
       }
     }
 

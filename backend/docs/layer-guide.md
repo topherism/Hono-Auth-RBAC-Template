@@ -10,12 +10,13 @@
 - Call a service/repository.
 - Return HTTP responses (`c.json`, `c.body`).
 
+### Services (optional)
+- Business logic (e.g., *“mark task complete and notify user”*).
+- Use repositories under the hood.
+- Reusable across HTTP handlers, jobs, etc.
+
 ### Repositories (optional)
 - Pure DB access layer.
 - Wrap Prisma queries (`findMany`, `create`, `update`, `delete`).
 - No knowledge of HTTP.
 
-### Services (optional)
-- Business logic (e.g., *“mark task complete and notify user”*).
-- Use repositories under the hood.
-- Reusable across HTTP handlers, jobs, etc.

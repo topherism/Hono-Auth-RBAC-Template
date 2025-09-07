@@ -7,29 +7,9 @@ import { CreateUserRoute, GetAllUserRoute } from "./users.routes";
 import { UserService } from "@/services/user.service";
 
 export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
-  try {
-    const input = c.req.valid("json");
-    const user = await UserService.createUser(input);
-    return c.json(user, HttpStatusCodes.CREATED);
-  } catch (err: any) {
-    if (err.code === "EMAIL_EXISTS") {
-      return c.json(
-        { message: "Email already in use" },
-        HttpStatusCodes.CONFLICT
-      );
-    }
-    if (err.code === "USERNAME_EXISTS") {
-      return c.json(
-        { message: "Username already in use" },
-        HttpStatusCodes.CONFLICT
-      );
-    }
-    
-    return c.json(
-      { message: "Internal Server Error" },
-      HttpStatusCodes.INTERNAL_SERVER_ERROR
-    );
-  }
+  const input = c.req.valid("json");
+  const user = await UserService.createUser(input);
+  return c.json(user, HttpStatusCodes.CREATED);
 };
 
 // export const getAllUsers: AppRouteHandler<GetAllUserRoute> = async (c) => {
