@@ -1,10 +1,19 @@
 // src/services/user.service.ts
 import { UserRepository } from "@/repositories/user.repository";
-import type { RegisterInput } from "@/schemas/auth.schema";
-import { CreateUserInput } from "@/schemas/user.schema";
-import bcrypt from "bcryptjs";
+import { CreateUserInput } from "@/schemas/users";
+import { BcryptHelper } from "@/utils/hash";
 
 export const UserService = {
+
+    // async findByEmail(email: string) {
+  //   return AuthRepository.findUserByEmail(email);
+  // },
+
+  // async findByUsername(username?: string) {
+  //   if (!username) return null;
+  //   return AuthRepository.findUserByUsername(username);
+  // },
+
   async createUser(input: CreateUserInput) {
     // Check email
     const existingEmail = await UserRepository.findUserByEmail(input.email);
@@ -27,16 +36,27 @@ export const UserService = {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(input.password, 10);
+    const hashedPassword = await BcryptHelper.hash(input.password);
 
     // Create user
     const user = await UserRepository.createUserWithInfo({
       ...input,
       password: hashedPassword,
+      username: input.username ?? undefined,
+      middle_name: input.middle_name ?? undefined,
     });
+
+    console.log(user);
 
     // Hide password
     const { password, ...safeUser } = user;
     return safeUser;
+  },
+
+  async getAllUsers() {
+    const users = await UserRepository.findAll();
+
+    // remove sensitive fields like password
+    return users.map(({ password, ...rest }) => rest);
   },
 };

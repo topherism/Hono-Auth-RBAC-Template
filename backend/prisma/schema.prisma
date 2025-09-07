@@ -26,13 +26,13 @@ model User {
   deniedPermissions UserDeniedPermission[] // many denied perms
   refreshTokens     RefreshToken[] // many sessions
 
-  userInfo UserInfo? // 1:1 optional profile
+  // ✅ User must always have UserInfo
+  userInfo UserInfo?
 }
 
 model UserInfo {
   userId String @id // PK = FK to User.id
-  user   User   @relation(fields: [userId], references: [id]) // belongs to one User
-
+  user       User    @relation(fields: [userId], references: [id])
   firstName  String  @map("first_name")
   middleName String? @map("middle_name")
   lastName   String  @map("last_name")

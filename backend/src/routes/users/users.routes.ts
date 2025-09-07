@@ -1,9 +1,9 @@
 import { RegisterSchema } from "@/schemas/auth.schema";
-import { CreateUserSchema } from "@/schemas/user.schema";
+import { CreateUserSchema, UserResponseSchema } from "@/schemas/users";
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent, jsonContentOneOf, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema, IdParamsSchema, IdUUIDParamsSchema } from "stoker/openapi/schemas";
+import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
+import { createErrorSchema, createMessageObjectSchema } from "stoker/openapi/schemas";
 
 const tags = ["Users"];
 
@@ -15,9 +15,15 @@ export const createUser = createRoute({
     body: jsonContentRequired(CreateUserSchema, "Create a new user"),
   },
   responses: {
-    [HttpStatusCodes.CREATED]: jsonContent(CreateUserSchema, "User created"),
-    [HttpStatusCodes.CONFLICT]: { description: "Email or Username already in use" },
-    [HttpStatusCodes.BAD_REQUEST]: { description: "Invalid input" },
+    [HttpStatusCodes.CREATED]: jsonContent(UserResponseSchema, "User created"),
+    [HttpStatusCodes.CONFLICT]: jsonContent(
+      createMessageObjectSchema("Email or Username already in use"),
+      "Email or Username already in use"
+    ),
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(CreateUserSchema),
+      "The validation error(s)"
+    ),
   },
 });
 
@@ -26,10 +32,11 @@ export const getAllUser = createRoute({
   method: "get",
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(RegisterSchema,"Fetched all users"),
-    [HttpStatusCodes.UNAUTHORIZED]: {
-      description: "Invalid credentials",
-    },
+    [HttpStatusCodes.OK]: jsonContent(RegisterSchema, "Fetched all users"),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      createMessageObjectSchema("Invalid credentials"),
+      "Invalid credentials"
+    ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
       description: "Validation error",
     },
@@ -38,5 +45,4 @@ export const getAllUser = createRoute({
 
 // Export route types for handlers
 export type CreateUserRoute = typeof createUser;
-export type UserRoute = typeof getAllUser;
-
+export type GetAllUserRoute = typeof getAllUser;
