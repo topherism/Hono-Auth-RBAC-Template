@@ -24,9 +24,9 @@ export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
         HttpStatusCodes.CONFLICT
       );
     }
-
+    
     return c.json(
-      { message: err.message ?? HttpStatusPhrases.INTERNAL_SERVER_ERROR },
+      { message: "Internal Server Error" },
       HttpStatusCodes.INTERNAL_SERVER_ERROR
     );
   }

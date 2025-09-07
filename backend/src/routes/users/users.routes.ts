@@ -3,7 +3,10 @@ import { CreateUserSchema, UserResponseSchema } from "@/schemas/users";
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema, createMessageObjectSchema } from "stoker/openapi/schemas";
+import {
+  createErrorSchema,
+  createMessageObjectSchema,
+} from "stoker/openapi/schemas";
 
 const tags = ["Users"];
 
@@ -16,13 +19,18 @@ export const createUser = createRoute({
   },
   responses: {
     [HttpStatusCodes.CREATED]: jsonContent(UserResponseSchema, "User created"),
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(CreateUserSchema),
+      "The validation error(s)"
+    ),
     [HttpStatusCodes.CONFLICT]: jsonContent(
       createMessageObjectSchema("Email or Username already in use"),
       "Email or Username already in use"
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(CreateUserSchema),
-      "The validation error(s)"
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+      createMessageObjectSchema("Internal Server Error"),
+      "Unexpected server error"
     ),
   },
 });

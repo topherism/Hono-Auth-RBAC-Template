@@ -4,8 +4,7 @@ import { CreateUserInput } from "@/schemas/users";
 import { BcryptHelper } from "@/utils/hash";
 
 export const UserService = {
-
-    // async findByEmail(email: string) {
+  // async findByEmail(email: string) {
   //   return AuthRepository.findUserByEmail(email);
   // },
 
@@ -42,8 +41,8 @@ export const UserService = {
     const user = await UserRepository.createUserWithInfo({
       ...input,
       password: hashedPassword,
-      username: input.username ?? undefined,
-      middle_name: input.middle_name ?? undefined,
+      username: input.username ?? null,
+      middle_name: input.middle_name ?? null, // ✅ always null, not undefined
     });
 
     console.log(user);
