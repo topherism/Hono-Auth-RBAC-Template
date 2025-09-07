@@ -5,6 +5,6 @@ export const UserInfoSchema = z.object({
   firstName: z.string(),
   middleName: z.string().nullable(),
   lastName: z.string(),
-});
+}).nullable();
 
 export type UserInfoResponse = z.infer<typeof UserInfoSchema>;

@@ -1,11 +1,17 @@
-import { RegisterSchema } from "@/schemas/auth.schema";
-import { CreateUserSchema, UserResponseSchema } from "@/schemas/users";
+import { notFoundSchema } from "@/lib/constants";
+import {
+  CreateUserSchema,
+  UserListResponseSchema,
+  UserResponseSchema,
+} from "@/schemas/users";
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import {
   createErrorSchema,
   createMessageObjectSchema,
+  IdParamsSchema,
+  IdUUIDParamsSchema,
 } from "stoker/openapi/schemas";
 
 const tags = ["Users"];
@@ -28,10 +34,6 @@ export const createUser = createRoute({
       createMessageObjectSchema("Email or Username already in use"),
       "Email or Username already in use"
     ),
-    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
-      createMessageObjectSchema("Internal Server Error"),
-      "Unexpected server error"
-    ),
   },
 });
 
@@ -40,17 +42,50 @@ export const getAllUser = createRoute({
   method: "get",
   tags,
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(RegisterSchema, "Fetched all users"),
-    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
-      createMessageObjectSchema("Invalid credentials"),
-      "Invalid credentials"
+    [HttpStatusCodes.OK]: jsonContent(
+      UserListResponseSchema,
+      "Fetched all users"
     ),
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
-      description: "Validation error",
-    },
   },
 });
+
+export const getOneUser = createRoute({
+  path: "/users/{id}",
+  method: "get",
+  request: {
+    params: IdUUIDParamsSchema,
+  },
+    responses: {
+    [HttpStatusCodes.OK]: jsonContent(UserResponseSchema, "The requested user"),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User Not Found"),
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(IdParamsSchema),
+      "Invalid Id Error"
+    ),
+  },
+})
+
+
+// export const patch = createRoute({
+//   path: "/tasks/{id}",
+//   method: "patch",
+//   tags,
+//   request: {
+//     params: IdUUIDParamsSchema,
+//     body: jsonContentRequired(patchTasksSchema, "The tasks updates"),
+//   },
+//   responses: {
+//     [HttpStatusCodes.OK]: jsonContent(selectTasksSchema, "The updated task"),
+//     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Task Not Found"),
+
+//     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
+//       [createErrorSchema(patchTasksSchema), createErrorSchema(IdParamsSchema)],
+//       "The validation error(s)"
+//     ),
+//   },
+// });
 
 // Export route types for handlers
 export type CreateUserRoute = typeof createUser;
 export type GetAllUserRoute = typeof getAllUser;
+export type GetOneUserRoute = typeof getOneUser;

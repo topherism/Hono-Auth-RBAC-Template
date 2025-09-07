@@ -7,7 +7,7 @@ import * as routes from "./users.routes";
 
 const router = createRouter()
 .openapi(routes.createUser, handlers.createUser)
-// .openapi(routes.getAllUser, handlers.getAllUser);
+.openapi(routes.getAllUser, handlers.getAllUsers);
 //   .openapi(routes.register, handlers.register)
 //   .openapi(routes.create, handlers.create)
 //   .openapi(routes.getOneList, handlers.getOneList)

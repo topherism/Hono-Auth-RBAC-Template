@@ -2,10 +2,15 @@ import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import {
-  LoginSchema,
+  // LoginSchema,
   RegisterSchema,
   AuthResponseSchema,
 } from "@/schemas/auth.schema";
+import {
+  LoginSchema,
+  // UserListResponseSchema,
+  // UserResponseSchema,
+} from "@/schemas/auth";
 import {
   createErrorSchema,
   createMessageObjectSchema,

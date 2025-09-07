@@ -11,6 +11,8 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
   //   const task =
   // const result = await UserService.findByEmailOrUsername(emailOrUsername);
+      // const user = await (db, email);
+
 
   return c.json(
     {

@@ -2,8 +2,11 @@
 
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { CreateUserRoute, GetAllUserRoute } from "./users.routes";
+import {
+  CreateUserRoute,
+  GetAllUserRoute,
+  GetOneUserRoute,
+} from "./users.routes";
 import { UserService } from "@/services/user.service";
 
 export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
@@ -11,21 +14,19 @@ export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
   const user = await UserService.createUser(input);
   return c.json(user, HttpStatusCodes.CREATED);
 };
+export const getAllUsers: AppRouteHandler<GetAllUserRoute> = async (c) => {
+  const users = await UserService.getAllUsersWithInfo();
+  return c.json(users, HttpStatusCodes.OK);
+};
 
-// export const getAllUsers: AppRouteHandler<GetAllUserRoute> = async (c) => {
-//   try {
+export const getOneUser: AppRouteHandler<GetOneUserRoute> = async (c) => {
+  const { id } = c.req.valid("param");
+  const user = await UserService.getOneUser(id);
 
-//     // return c.json(user, HttpStatusCodes.CREATED);
-//   } catch (err: any) {
+  return c.json(user, HttpStatusCodes.OK);
+};
 
-//     return c.json(
-//       { message: err.message ?? HttpStatusPhrases.INTERNAL_SERVER_ERROR },
-//       HttpStatusCodes.INTERNAL_SERVER_ERROR
-//     );
-//   }
-// }
-
-// export const patch: AppRouteHandler<PatchRoute> = async (c) => {
+// export const patchUser: AppRouteHandler<PatchRoute> = async (c) => {
 //   const { id } = c.req.valid("param");
 //   const updates = c.req.valid("json");
 //   const [task] = await db
