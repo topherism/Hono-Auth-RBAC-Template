@@ -6,7 +6,8 @@ import { LoginRoute } from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
 import { refreshTokenCookie } from "@/utils/jwt";
 
-import { setCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
+import { AppError } from "@/lib/errors";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
@@ -19,33 +20,25 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
     refreshTokenCookie
   );
 
-  return c.json(result, HttpStatusCodes.OK);
+  return c.json(
+    { user: result.user, accessToken: result.tokens.accessToken },
+    HttpStatusCodes.OK
+  );
 };
 
-// export const refresh: AppRouteHandler<any> = async (c) => {
-//   // Get refresh token from cookie
-//   const refreshToken = c.req.cookie("auth_refresh_token");
-//   if (!refreshToken) {
-//     return c.json({ message: "No refresh token" }, HttpStatusCodes.UNAUTHORIZED);
-//   }
+export const refresh: AppRouteHandler<any> = async (c) => {
+  // Get refresh token from cookie
+  const refreshToken = getCookie(c, "auth_refresh_token");
 
-//   // Find token in DB
-//   const tokenRecord = await AuthRepository.findRefreshToken(refreshToken);
-//   if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
-//     return c.json({ message: "Invalid or expired refresh token" }, HttpStatusCodes.UNAUTHORIZED);
-//   }
+  if (!refreshToken) {
+    throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid or expired refresh token");
+  }
 
-//   // Generate new access token (and optionally new refresh token)
-//   const { accessToken, refreshToken: newRefreshToken, jti, refreshTokenExp } = 
-//     await generateToken(tokenRecord.userId);
+  const tokens = await AuthService.refresh(refreshToken);
 
-//   // Save new refresh token and delete old one
-//   await AuthRepository.deleteRefreshToken(refreshToken);
-//   await AuthRepository.createRefreshToken(tokenRecord.userId, refreshTokenExp, jti);
+  // Set new refresh token in cookie
+  setCookie(c, "auth_refresh_token", tokens.refreshToken, refreshTokenCookie);
 
-//   // Set new refresh token in cookie
-//   setCookie(c, "auth_refresh_token", newRefreshToken, refreshTokenCookie);
-
-//   // Return new access token
-//   return c.json({ accessToken: accessToken }, HttpStatusCodes.OK);
-// };
+  // Return new access token
+  return c.json({ accessToken: tokens.accessToken }, HttpStatusCodes.OK);
+};

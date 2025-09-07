@@ -1,3 +1,4 @@
+import envConfig from "@/env";
 import { randomUUID } from "crypto";
 import { sign, verify } from "hono/jwt";
 import type { CookieOptions } from "hono/utils/cookie";
@@ -14,8 +15,8 @@ const ISSUER = "bun-hono-name";
 const AUDIENCE = "bun-hono-users";
 
 export const generateToken = async (userId: string) => {
-  const access_token_secret = process.env.JWT_ACCESS_SECRET;
-  const refresh_token_secret = process.env.JWT_REFRESH_SECRET;
+  const access_token_secret = envConfig.JWT_ACCESS_SECRET;
+  const refresh_token_secret = envConfig.JWT_REFRESH_SECRET;
 
   if (!access_token_secret || !refresh_token_secret) {
     throw new Error("JWT secrets are not set in environment variables");
@@ -56,7 +57,7 @@ export const generateToken = async (userId: string) => {
 
 export const accessTokenCookie = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: envConfig.NODE_ENV === "production",
   sameSite: "lax", // or Strict
   path: "/",
   maxAge: 300, // 5 mins
@@ -64,7 +65,7 @@ export const accessTokenCookie = {
 
 export const refreshTokenCookie = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: envConfig.NODE_ENV === "production",
   sameSite: "lax", // or Strict
   path: "/",
   maxAge: 60 * 60 * 24, // 1 day

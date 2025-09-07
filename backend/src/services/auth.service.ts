@@ -40,4 +40,34 @@ export const AuthService = {
       tokens: { accessToken, refreshToken },
     };
   },
+
+  async refresh(refreshToken: string) {
+    // finds jti in the refreshToken db
+    const tokenRecord = await AuthRepository.findRefreshToken(refreshToken);
+    if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
+      throw new AppError(
+        HttpStatusCodes.UNAUTHORIZED,
+        "Invalid or expired refresh token"
+      );
+    }
+
+    // Generate new access token (and optionally new refresh token)
+    const {
+      accessToken,
+      refreshToken: newRefreshToken,
+      jti,
+      refreshTokenExp,
+    } = await generateToken(tokenRecord.userId);
+
+    // Save new refresh token and delete old one
+    await AuthRepository.deleteRefreshToken(refreshToken);
+    await AuthRepository.createRefreshToken(
+      tokenRecord.userId,
+      refreshTokenExp,
+      jti
+    );
+
+    return { accessToken, refreshToken: newRefreshToken };
+  },
+
 };

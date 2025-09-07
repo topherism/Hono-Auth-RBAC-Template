@@ -7,6 +7,6 @@ import * as routes from "./auth.routes";
 
 const router = createRouter()
   .openapi(routes.login, handlers.login)
-  // .openapi(routes.register, handlers.register)
+  .openapi(routes.refresh, handlers.refresh)
 
 export default router;
