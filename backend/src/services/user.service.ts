@@ -7,25 +7,16 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
 export const UserService = {
-  async findByEmail(email: string) {
-    return UserRepository.findUserByEmail(email);
-  },
-
-  async findByUsername(username?: string) {
-    if (!username) return null;
-    return UserRepository.findUserByUsername(username);
-  },
-
   async createUser(input: CreateUserInput) {
     // Check email
-    const existingEmail = await UserRepository.findUserByEmail(input.email);
+    const existingEmail = await UserRepository.findUserWithInfoByEmail(input.email);
     if (existingEmail) {
       throw new AppError(HttpStatusCodes.CONFLICT, "Email already in use");
     }
 
     // Check username (if provided)
     if (input.username) {
-      const existingUsername = await UserRepository.findUserByUsername(
+      const existingUsername = await UserRepository.findUserWithInfoByUsername(
         input.username
       );
       if (existingUsername) {

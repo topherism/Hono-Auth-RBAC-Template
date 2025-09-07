@@ -1,16 +1,7 @@
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import {
-  // LoginSchema,
-  RegisterSchema,
-  AuthResponseSchema,
-} from "@/schemas/auth.schema";
-import {
-  LoginSchema,
-  // UserListResponseSchema,
-  // UserResponseSchema,
-} from "@/schemas/auth";
+import { LoginSchema, AuthResponseSchema } from "@/schemas/auth";
 import {
   createErrorSchema,
   createMessageObjectSchema,
@@ -30,38 +21,40 @@ export const login = createRoute({
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(AuthResponseSchema, "Login success"),
-    [HttpStatusCodes.UNAUTHORIZED]: {
-      description: "Invalid credentials",
-    },
-    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: {
-      description: "Validation error",
-    },
-  },
-});
-
-export const register = createRoute({
-  path: "/auth/register",
-  method: "post",
-  tags,
-  request: {
-    body: jsonContentRequired(RegisterSchema, "Register a new user"),
-  },
-  responses: {
-    [HttpStatusCodes.CREATED]: jsonContent(
-      AuthResponseSchema,
-      "Register success"
-    ),
-    [HttpStatusCodes.CONFLICT]: jsonContent(
-      createMessageObjectSchema("Email or username already exists"),
-      "Email or username already exists"
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      createMessageObjectSchema("Invalid credentials"),
+      "Invalid credentials"
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(RegisterSchema),
+      createErrorSchema(LoginSchema),
       "The validation error(s)"
     ),
   },
 });
 
+// export const register = createRoute({
+//   path: "/auth/register",
+//   method: "post",
+//   tags,
+//   request: {
+//     body: jsonContentRequired(RegisterSchema, "Register a new user"),
+//   },
+//   responses: {
+//     [HttpStatusCodes.CREATED]: jsonContent(
+//       AuthResponseSchema,
+//       "Register success"
+//     ),
+//     [HttpStatusCodes.CONFLICT]: jsonContent(
+//       createMessageObjectSchema("Email or username already exists"),
+//       "Email or username already exists"
+//     ),
+//     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+//       createErrorSchema(RegisterSchema),
+//       "The validation error(s)"
+//     ),
+//   },
+// });
+
 // Export route types for handlers
 export type LoginRoute = typeof login;
-export type RegisterRoute = typeof register;
+// export type RegisterRoute = typeof register;

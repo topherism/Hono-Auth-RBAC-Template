@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { User, UserInfo } from "@prisma/client";
 
-export type UserWithInfo = User & { userInfo: UserInfo | null};
+export type UserWithInfo = User & { userInfo: UserInfo | null };
 
 export const UserRepository = {
   async createUserWithInfo(input: {
@@ -32,8 +32,15 @@ export const UserRepository = {
     return user as UserWithInfo;
   },
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { email } });
+  async findAllUserWithInfo() {
+    return prisma.user.findMany({
+      include: {
+        userInfo: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   },
 
   async findUserWithInfoById(id: string): Promise<UserWithInfo | null> {
@@ -45,19 +52,24 @@ export const UserRepository = {
     });
   },
 
-  async findUserByUsername(username?: string | null): Promise<User | null> {
-    if (!username) return null;
-    return prisma.user.findUnique({ where: { username } });
-  },
-
-  async findAllUserWithInfo() {
-    return prisma.user.findMany({
+  async findUserWithInfoByEmail(email: string): Promise<UserWithInfo | null> {
+    return prisma.user.findFirst({
       include: {
         userInfo: true,
       },
-      orderBy: {
-        createdAt: "desc",
+      where: { email },
+    });
+  },
+
+  async findUserWithInfoByUsername(
+    username?: string | null
+  ): Promise<UserWithInfo | null> {
+    if (!username) return null;
+    return prisma.user.findFirst({
+      include: {
+        userInfo: true,
       },
+      where: { username },
     });
   },
 };

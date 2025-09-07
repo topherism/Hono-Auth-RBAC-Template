@@ -1,23 +1,43 @@
+import { AppError } from "@/lib/errors";
 import { AuthRepository } from "@/repositories/auth.repository";
+import { UserRepository } from "@/repositories/user.repository";
 import { BcryptHelper } from "@/utils/hash";
+import { generateToken, refreshTokenCookie } from "@/utils/jwt";
+import * as HttpStatusCodes from "stoker/http-status-codes";
 
 export const AuthService = {
+  async login(emailOrUsername: string, password: string) {
+    // Find user by email or username
+    let user =
+      (await UserRepository.findUserWithInfoByEmail(emailOrUsername)) ??
+      (await UserRepository.findUserWithInfoByUsername(emailOrUsername));
 
+    if (!user)
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid credentials");
 
-  async login(emailOrUsername: string, password: string){
-  }
+    // Verify password
+    const valid = await BcryptHelper.verify(password, user.password);
+    if (!valid)
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid credentials");
 
-  // async register(email: string, password: string, username?: string) {
-  //   const hashedPassword = await BcryptHelper.hash(password);
-  //   return AuthRepository.createUser(email, hashedPassword, username);
-  // },
+    // Generate tokens
+    const { accessToken, refreshToken, jti, refreshTokenExp } =
+      await generateToken(user.id);
 
-  // async verifyPassword(plainText: string, hashed: string) {
-  //   return BcryptHelper.verify(plainText, hashed);
-  // },
+    // Save refresh token in DB
+    await AuthRepository.createRefreshToken(user.id, refreshTokenExp, jti);
 
-  // async insertRefreshToken(userId: string, expiresAt: Date, jti: string) {
-  //   return AuthRepository.createRefreshToken(userId, expiresAt, jti);
-  // } 
-
+    // Return result to handler
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.userInfo!.firstName,
+        middleName: user.userInfo?.middleName ?? null,
+        lastName: user.userInfo!.lastName,
+      },
+      tokens: { accessToken, refreshToken },
+    };
+  },
 };

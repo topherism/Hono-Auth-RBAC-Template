@@ -21,8 +21,8 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     Scalar((c) => {
       return {
         url: "/doc",
-        layout: "classic",
-        theme: "kepler",
+        layout: "modern",
+        theme: "solarized",
         proxyUrl:
           envConfig.NODE_ENV === "development"
             ? "https://proxy.scalar.com"

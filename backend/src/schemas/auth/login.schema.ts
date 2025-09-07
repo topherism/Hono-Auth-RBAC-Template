@@ -23,13 +23,13 @@ export const LoginSchema = z
         }
       )
       .openapi({
-        example: "user@example.com or john_doe",
+        example: "test@test.com or testusername",
         description: "Either a valid email or a username (min 3 characters)",
       }),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters long." })
-      .openapi({ example: "MyS3cureP@ssw0rd", description: "Secure password" }),
+      .openapi({ example: "password123", description: "Secure password" }),
   })
   .openapi("LoginSchema");
 

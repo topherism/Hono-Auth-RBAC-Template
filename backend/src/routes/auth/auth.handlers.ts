@@ -2,33 +2,50 @@
 
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { LoginRoute, RegisterRoute } from "./auth.routes";
+import { LoginRoute } from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
-import { UserService } from "@/services/user.service";
+import { refreshTokenCookie } from "@/utils/jwt";
+
+import { setCookie } from "hono/cookie";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
-  //   const task =
-  // const result = await UserService.findByEmailOrUsername(emailOrUsername);
-      // const user = await (db, email);
+  const result = await AuthService.login(emailOrUsername, password);
 
-
-  return c.json(
-    {
-      accessToken: "fake_access_token",
-      refreshToken: "fake_refresh_token",
-    },
-    HttpStatusCodes.OK
+  setCookie(
+    c,
+    "auth_refresh_token",
+    result.tokens.refreshToken,
+    refreshTokenCookie
   );
+
+  return c.json(result, HttpStatusCodes.OK);
 };
 
-// export const register: AppRouteHandler<RegisterRoute> = async (c) => {
-//   const { email, username, password, first_name, middle_name, last_name } =
-//     c.req.valid("json");
+// export const refresh: AppRouteHandler<any> = async (c) => {
+//   // Get refresh token from cookie
+//   const refreshToken = c.req.cookie("auth_refresh_token");
+//   if (!refreshToken) {
+//     return c.json({ message: "No refresh token" }, HttpStatusCodes.UNAUTHORIZED);
+//   }
 
-  
-//   //   //   const task =
+//   // Find token in DB
+//   const tokenRecord = await AuthRepository.findRefreshToken(refreshToken);
+//   if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
+//     return c.json({ message: "Invalid or expired refresh token" }, HttpStatusCodes.UNAUTHORIZED);
+//   }
 
-//   //   return c.json(HttpStatusCodes.CREATED);
+//   // Generate new access token (and optionally new refresh token)
+//   const { accessToken, refreshToken: newRefreshToken, jti, refreshTokenExp } = 
+//     await generateToken(tokenRecord.userId);
+
+//   // Save new refresh token and delete old one
+//   await AuthRepository.deleteRefreshToken(refreshToken);
+//   await AuthRepository.createRefreshToken(tokenRecord.userId, refreshTokenExp, jti);
+
+//   // Set new refresh token in cookie
+//   setCookie(c, "auth_refresh_token", newRefreshToken, refreshTokenCookie);
+
+//   // Return new access token
+//   return c.json({ accessToken: accessToken }, HttpStatusCodes.OK);
 // };
