@@ -5,3 +5,8 @@ Content-Type: application/json
   "emailOrUsername": "test@test.com",
   "password": "password123"
 }
+
+###
+GET http://localhost:3000/api/auth/refresh
+Content-Type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5M2JiNzA5MS02NDg1LTQzYjUtYmFlMy0xNWM2ZGQ5NGJlNGMiLCJpYXQiOjE3NTcyNzI1NjQsImV4cCI6MTc1NzI3Mjg2NCwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImJ1bi1ob25vLW5hbWUiLCJhdWQiOiJidW4taG9uby11c2VycyJ9.ntohax-Oj0yhGn9UNw4HGLfubuirqxKFQhjf0WNYo2c"

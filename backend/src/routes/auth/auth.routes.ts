@@ -36,12 +36,6 @@ export const refresh = createRoute({
   path: "/auth/refresh",
   method: "get",
   tags,
-  request: {
-    body: jsonContentRequired(
-      LoginSchema,
-      "Login with email/username + password"
-    ),
-  },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       z.object({
