@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/db/client";
 import type { User, UserInfo } from "@prisma/client";
 
 export type UserWithInfo = User & { userInfo: UserInfo | null };

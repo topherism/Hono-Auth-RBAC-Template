@@ -1,3 +1,4 @@
+import { Role } from "@/constants/roles";
 import envConfig from "@/env";
 import { randomUUID } from "crypto";
 import { sign, verify } from "hono/jwt";
@@ -6,7 +7,7 @@ import type { JWTPayload } from "hono/utils/jwt/types";
 
 export interface DefineJWT extends JWTPayload {
   sub: string; // subject = userId
-  role?: string; // optional custom claim
+  role?: Role; // optional custom claim
   type: "access" | "refresh";
   jti?: string;
 }

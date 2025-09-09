@@ -1,8 +1,10 @@
+import envConfig from "@/env";
 import { AppError } from "@/lib/errors";
 import { AuthRepository } from "@/repositories/auth.repository";
 import { UserRepository } from "@/repositories/user.repository";
 import { BcryptHelper } from "@/utils/hash";
-import { generateToken, refreshTokenCookie } from "@/utils/jwt";
+import { generateToken, refreshTokenCookie, verifyToken } from "@/utils/jwt";
+import { verify } from "hono/utils/jwt/jwt";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 export const AuthService = {
@@ -43,7 +45,15 @@ export const AuthService = {
 
   async refresh(refreshToken: string) {
     // finds jti in the refreshToken db
-    const tokenRecord = await AuthRepository.findRefreshToken(refreshToken);
+
+    const payload = await verifyToken(
+      refreshToken,
+      envConfig.JWT_REFRESH_SECRET!
+    );
+
+    console.log(payload, "payload123");
+
+    const tokenRecord = await AuthRepository.findRefreshToken(payload.jti!);
     if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
       throw new AppError(
         HttpStatusCodes.UNAUTHORIZED,
@@ -69,5 +79,4 @@ export const AuthService = {
 
     return { accessToken, refreshToken: newRefreshToken };
   },
-
 };

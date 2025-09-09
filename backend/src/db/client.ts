@@ -1,5 +1,4 @@
-// lib/prisma.ts
-
+// src/db/client.ts
 import envConfig from "@/env"
 import { PrismaClient } from "@prisma/client"
 

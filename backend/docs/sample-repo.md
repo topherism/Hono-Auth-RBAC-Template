@@ -1,6 +1,6 @@
 //repository
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/db/client.ts";
 
 export const TaskRepository = {
   findAll: () => prisma.task.findMany(),

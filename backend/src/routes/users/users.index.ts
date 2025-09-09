@@ -4,10 +4,27 @@ import { createRouter } from "@/lib/create-app";
 
 import * as handlers from "./users.handlers";
 import * as routes from "./users.routes";
+import { authenticationMiddleware } from "@/middlewares/authentication.middleware";
+import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
+import { ROLES } from "@/constants/roles";
+import { PERMISSIONS } from "@/constants/permissions";
 
-const router = createRouter()
-.openapi(routes.createUser, handlers.createUser)
-.openapi(routes.getAllUser, handlers.getAllUsers);
+const router = createRouter();
+// Public route
+router.openapi(routes.createUser, handlers.createUser);
+
+// Protected route → requires valid JWT
+router.use(
+  routes.getAllUser.path,
+  authenticationMiddleware,
+  authorizeMiddleware(ROLES.ADMIN)
+);
+router.openapi(routes.getAllUser, handlers.getAllUsers);
+
+// Protected + role-based
+// router.use("/users/:id", authorizeMiddleware(ROLES.ADMIN));
+// router.openapi(routes.getOneUser, handlers.getOneUser);
+
 //   .openapi(routes.register, handlers.register)
 //   .openapi(routes.create, handlers.create)
 //   .openapi(routes.getOneList, handlers.getOneList)

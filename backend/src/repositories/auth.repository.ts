@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/db/client";
 
 export const AuthRepository = {
   async createRefreshToken(userId: string, expiresAt: Date, jti: string) {

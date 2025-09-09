@@ -1,8 +1,8 @@
-// src/routes/tasks/tasks.handlers.ts
+// src/routes/auth/auth.handlers.ts
 
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { LoginRoute } from "./auth.routes";
+import { LoginRoute, RefreshRoute } from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
 import { refreshTokenCookie } from "@/utils/jwt";
 
@@ -26,7 +26,7 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
   );
 };
 
-export const refresh: AppRouteHandler<any> = async (c) => {
+export const refresh: AppRouteHandler<RefreshRoute> = async (c) => {
   // Get refresh token from cookie
   const refreshToken = getCookie(c, "auth_refresh_token");
 
@@ -34,7 +34,9 @@ export const refresh: AppRouteHandler<any> = async (c) => {
     throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid or expired refresh token");
   }
 
+
   const tokens = await AuthService.refresh(refreshToken);
+  console.log(tokens, "got tokens");
 
   // Set new refresh token in cookie
   setCookie(c, "auth_refresh_token", tokens.refreshToken, refreshTokenCookie);

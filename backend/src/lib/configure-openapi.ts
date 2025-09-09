@@ -22,7 +22,12 @@ export default function configureOpenAPI(app: AppOpenAPI) {
       return {
         url: "/doc",
         layout: "modern",
-        theme: "solarized",
+        theme: "deepSpace",
+        //deepSpace
+        //bluePlanet
+        //mars
+        //kepler
+        //purple
         proxyUrl:
           envConfig.NODE_ENV === "development"
             ? "https://proxy.scalar.com"

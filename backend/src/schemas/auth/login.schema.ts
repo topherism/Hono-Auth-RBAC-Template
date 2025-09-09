@@ -8,6 +8,7 @@ export const LoginSchema = z
   .object({
     emailOrUsername: z
       .string()
+      .trim()
       .min(3, { message: "Must be at least 3 characters" })
       .refine(
         (val) => {

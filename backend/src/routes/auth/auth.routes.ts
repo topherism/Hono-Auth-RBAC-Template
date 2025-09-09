@@ -53,6 +53,11 @@ export const refresh = createRoute({
   },
 });
 
+// Export route types for handlers
+export type LoginRoute = typeof login;
+export type RefreshRoute = typeof refresh;
+
+
 // export const register = createRoute({
 //   path: "/auth/register",
 //   method: "post",
@@ -75,7 +80,3 @@ export const refresh = createRoute({
 //     ),
 //   },
 // });
-
-// Export route types for handlers
-export type LoginRoute = typeof login;
-// export type RegisterRoute = typeof register;

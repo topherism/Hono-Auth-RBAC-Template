@@ -6,7 +6,7 @@ import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import envConfig from "@/env";
 
-export const authentication: MiddlewareHandler = async (c, next) => {
+export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
   try {
     const authHeader = c.req.header("Authorization");
 
@@ -24,7 +24,7 @@ export const authentication: MiddlewareHandler = async (c, next) => {
     }
 
     // Attach user info to context for downstream handlers
-    c.set("user", { id: payload.sub, role: payload.role });
+    c.set("user", { id: payload.sub });
 
     return next();
   } catch (err: any) {
