@@ -29,6 +29,13 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   JWT_ACCESS_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
+
+  SUPERADMIN_EMAIL: z.string().email(),
+  SUPERADMIN_USERNAME: z.string().min(3),
+  SUPERADMIN_TEMP_PASSWORD: z.string().min(6),
+  TECHNICAL_EMAIL: z.string().email(),
+  TECHNICAL_USERNAME: z.string().min(3),
+  TECHNICAL_TEMP_PASSWORD: z.string().min(6),
 });
 
 export type Env = z.infer<typeof envSchema>;

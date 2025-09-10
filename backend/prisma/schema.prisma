@@ -13,13 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id        String   @id @default(uuid()) // PK
   email     String   @unique // unique email
   username  String?  @unique // optional, unique if set
   password  String // hashed password
-  createdAt DateTime @default(now()) @map("create_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  changedPasswordAt DateTime?   @map("changed_password_at")
+
+  isSystem Boolean @default(false) @map("is_system")
+  isActive Boolean @default(true) @map("is_active")
 
   // Relations
   roles             UserRole[] // many roles

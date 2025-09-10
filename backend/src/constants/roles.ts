@@ -1,4 +1,6 @@
 export const ROLES = {
+  SUPERADMIN: 'superadmin',
+  TECHNICAL: 'technical',
   ADMIN: 'admin',
   COORDINATOR: 'coordinator',
   BORROWER: 'borrower',

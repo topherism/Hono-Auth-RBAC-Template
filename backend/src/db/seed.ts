@@ -1,55 +1,16 @@
 import { prisma } from "./client";
-import { ROLES } from "@/constants/roles";
-import { PERMISSIONS } from "@/constants/permissions";
-import { ROLE_PERMISSIONS } from "@/constants/role-permissions";
+import { seedRolesAndPermissions } from "./seeds/roles-permissions";
 
 async function main() {
-  console.log("🌱 Seeding database...");
+  console.log("🌱 Starting database seed...");
 
-  // 1. Seed Roles
-  for (const roleName of Object.values(ROLES)) {
-    await prisma.role.upsert({
-      where: { name: roleName },
-      update: {},
-      create: { name: roleName },
-    });
-  }
+  await seedRolesAndPermissions();
 
-  // 2. Seed Permissions
-  for (const permName of Object.values(PERMISSIONS)) {
-    await prisma.permission.upsert({
-      where: { name: permName },
-      update: {},
-      create: { name: permName },
-    });
-  }
+  // later you can add more:
+  // await seedUsers();
+  // await seedDemoData();
 
-  // 3. Assign default permissions to roles
-  for (const [roleName, perms] of Object.entries(ROLE_PERMISSIONS)) {
-    const role = await prisma.role.findUnique({ where: { name: roleName } });
-    if (!role) continue;
-
-    for (const permName of perms) {
-      const perm = await prisma.permission.findUnique({ where: { name: permName } });
-      if (!perm) continue;
-
-      await prisma.rolePermission.upsert({
-        where: {
-          roleId_permissionId: {
-            roleId: role.id,
-            permissionId: perm.id,
-          },
-        },
-        update: {},
-        create: {
-          roleId: role.id,
-          permissionId: perm.id,
-        },
-      });
-    }
-  }
-
-  console.log("✅ Seeding complete.");
+  console.log("🌱 Seeding finished.");
 }
 
 main()
