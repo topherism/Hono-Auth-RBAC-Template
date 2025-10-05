@@ -17,7 +17,7 @@ router.openapi(routes.createUser, handlers.createUser);
 router.use(
   routes.getAllUser.path,
   authenticationMiddleware,
-  authorizeMiddleware(ROLES.ADMIN)
+  // authorizeMiddleware(ROLES.ADMIN)
 );
 router.openapi(routes.getAllUser, handlers.getAllUsers);
 

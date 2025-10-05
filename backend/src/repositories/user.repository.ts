@@ -1,5 +1,5 @@
 import { prisma } from "@/db/client";
-import type { User, UserInfo } from "@prisma/client";
+import type { User, UserInfo, UserRole } from "@prisma/client";
 
 export type UserWithInfo = User & { userInfo: UserInfo | null };
 
@@ -11,6 +11,7 @@ export const UserRepository = {
     first_name: string;
     middle_name?: string | null;
     last_name: string;
+    role: string;
   }): Promise<UserWithInfo> {
     const user = await prisma.user.create({
       data: {
@@ -72,4 +73,5 @@ export const UserRepository = {
       where: { username },
     });
   },
+
 };

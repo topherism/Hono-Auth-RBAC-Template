@@ -22,7 +22,7 @@ export async function seedSuperAdmin() {
   }
 
   if (!superAdmin) {
-    console.log("👑 Creating Super Admin account...");
+    logger.info("👑 Creating Super Admin account...");
 
     const hashedPassword = await BcryptHelper.hash(superAdminPassword);
 
@@ -49,7 +49,6 @@ export async function seedSuperAdmin() {
     // });
     logger.info("✅ Super Admin account created.");
   } else {
-    console.log("✅ Super Admin already exists.");
     logger.info("SUPERADMIN already exists.");
   }
 }
