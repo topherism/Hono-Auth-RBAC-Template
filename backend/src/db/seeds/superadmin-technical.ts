@@ -26,27 +26,28 @@ export async function seedSuperAdmin() {
 
     const hashedPassword = await BcryptHelper.hash(superAdminPassword);
 
-    // superAdmin = await prisma.user.create({
-    //   data: {
-    //     email: superAdminEmail,
-    //     username: superAdminUsername,
-    //     password: hashedPassword,
-    //     isSystem: true, // 🚨 mark as system account
-    //     roles: {
-    //       create: {
-    //         role: {
-    //           connect: { name: ROLES.SUPERADMIN }, // attach Admin role
-    //         },
-    //       },
-    //     },
-    //     userInfo: {
-    //       create: {
-    //         firstName: "Super",
-    //         lastName: "Admin",
-    //       },
-    //     },
-    //   },
-    // });
+    await prisma.user.create({
+      data: {
+        email: superAdminEmail,
+        username: superAdminUsername,
+        password: hashedPassword,
+        isSystem: true, // 🚨 mark as system account
+        roles: {
+          create: {
+            role: {
+              connect: { name: ROLES.SUPERADMIN }, // attach Admin role
+            },
+          },
+        },
+        userInfo: {
+          create: {
+            firstName: "Super",
+            lastName: "Admin",
+          },
+        },
+      },
+    });
+
     logger.info("✅ Super Admin account created.");
   } else {
     logger.info("SUPERADMIN already exists.");

@@ -1,3 +1,5 @@
+// backend/src/middlewares/pino-logger.ts
+
 import envConfig from "@/env";
 import { pinoLogger as logger } from "hono-pino";
 import pino from "pino";

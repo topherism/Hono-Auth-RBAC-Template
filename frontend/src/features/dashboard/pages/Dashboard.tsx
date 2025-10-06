@@ -2,6 +2,7 @@
 import { Paper, Title, Container } from "@mantine/core";
 
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import TruckLoader from "@/components/TruckLoader";
 
 export default function LoginPage() {
   const { user } = useAuthStore();
@@ -14,6 +15,7 @@ export default function LoginPage() {
 
           {user?.email || "asdasd"}
         </Title>
+        <TruckLoader />
       </Paper>
     </Container>
   );

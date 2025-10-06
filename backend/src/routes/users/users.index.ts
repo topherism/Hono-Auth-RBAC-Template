@@ -11,7 +11,6 @@ import { PERMISSIONS } from "@/constants/permissions";
 
 const router = createRouter();
 // Public route
-router.openapi(routes.createUser, handlers.createUser);
 
 // Protected route → requires valid JWT
 router.use(
@@ -20,6 +19,7 @@ router.use(
   // authorizeMiddleware(ROLES.ADMIN)
 );
 router.openapi(routes.getAllUser, handlers.getAllUsers);
+router.openapi(routes.createUser, handlers.createUser);
 
 // Protected + role-based
 // router.use("/users/:id", authorizeMiddleware(ROLES.ADMIN));

@@ -83,7 +83,7 @@ model UserRole {
   userId String
   role   Role   @relation(fields: [roleId], references: [id])
   roleId Int
-
+  
   @@id([userId, roleId])
 }
 
@@ -107,7 +107,6 @@ model UserDeniedPermission {
   userId       String
   permission   Permission @relation(fields: [permissionId], references: [id])
   permissionId Int
-
   @@id([userId, permissionId])
 }
 
