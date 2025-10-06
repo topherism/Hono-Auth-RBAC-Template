@@ -2,7 +2,6 @@
 import { Paper, Title, Container } from "@mantine/core";
 
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import TruckLoader from "@/components/TruckLoader";
 
 export default function LoginPage() {
   const { user } = useAuthStore();
@@ -11,11 +10,9 @@ export default function LoginPage() {
     <Container bg="brand">
       <Paper radius="md" p="xl" withBorder style={{ justifyContent: "center" }}>
         <Title order={2} ta="center" mb="sm">
-          TrackKIT Dashboard 
-
+          TrackKIT Dashboard
           {user?.email || "asdasd"}
         </Title>
-        <TruckLoader />
       </Paper>
     </Container>
   );

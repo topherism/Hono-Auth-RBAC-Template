@@ -3,6 +3,7 @@ import { AppShell } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import TruckLoader from "@/components/TruckLoader";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const expandedWidth = 220;
@@ -10,12 +11,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [opened, setOpened] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Auto-collapse on mobile, restore on desktop
   useEffect(() => {
     setOpened(!isMobile); // collapsed on mobile, expanded on desktop
   }, [isMobile]);
   console.log(opened);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 5500); // simulate
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     // AppLayout.tsx
@@ -42,7 +49,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         p={0}
         style={{
           // animate width on desktop; mobile uses show/hide
-         transition: "width 0.3s ease-in-out",
+          transition: "width 0.3s ease-in-out",
           width: isMobile
             ? opened
               ? "100%"
@@ -55,8 +62,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Sidebar opened={opened} onToggle={setOpened} />
       </AppShell.Navbar>
 
-      <AppShell.Main style={{ background: "#f0f0f0" }}>
-        {children}
+      <AppShell.Main style={{ background: "#f0f0f0", position: "relative" }}>
+        {loading ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#f0f0f0",
+              zIndex: 5,
+            }}
+          >
+            <TruckLoader scale={1.2} />
+          </div>
+        ) : (
+          children
+        )}
       </AppShell.Main>
     </AppShell>
   );
