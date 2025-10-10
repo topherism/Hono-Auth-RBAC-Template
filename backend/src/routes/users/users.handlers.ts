@@ -15,7 +15,7 @@ export const createUser: AppRouteHandler<CreateUserRoute> = async (c) => {
   return c.json(user, HttpStatusCodes.CREATED);
 };
 export const getAllUsers: AppRouteHandler<GetAllUserRoute> = async (c) => {
-  const users = await UserService.getAllUsersWithInfo();
+  const users = await UserService.getAllUsers();
   return c.json(users, HttpStatusCodes.OK);
 };
 

@@ -5,7 +5,6 @@ import { BcryptHelper } from "@/utils/hash";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { UserRoleRepository } from "@/repositories/user-role.repository";
 import { RoleRepository } from "@/repositories/role.repository";
 
 export const UserService = {
@@ -53,7 +52,6 @@ export const UserService = {
   async getAllUsers() {
     const users = await UserRepository.findAllUserWithInfo();
 
-    // remove sensitive fields like password
     return users;
   },
 

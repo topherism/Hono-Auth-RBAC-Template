@@ -13,38 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid()) // PK
-  email     String   @unique // unique email
-  username  String?  @unique // optional, unique if set
-  password  String // hashed password
-  createdAt DateTime @default(now()) @map("created_at")
-  changedPasswordAt DateTime?   @map("changed_password_at")
-
-  isSystem Boolean @default(false) @map("is_system")
-  isActive Boolean @default(true) @map("is_active")
-
-  // Relations
-  role              UserRole? // single role
-  permissions       UserPermission[] // many permissions
-  deniedPermissions UserDeniedPermission[] // many denied perms
-  refreshTokens     RefreshToken[] // many sessions
-
-  // ✅ User must always have UserInfo
-  userInfo UserInfo?
-}
-
-model UserInfo {
-  userId     String  @id // PK = FK to User.id
-  user       User    @relation(fields: [userId], references: [id])
-  firstName  String  @map("first_name")
-  middleName String? @map("middle_name")
-  lastName   String  @map("last_name")
-}
-
-//////////////////////////////
-// Roles
-//////////////////////////////
 enum RoleName {
   superadmin
   technical
@@ -54,11 +22,15 @@ enum RoleName {
   viewer
 }
 
+//////////////////////////////
+// Roles
+//////////////////////////////
+
 model Role {
   id        Int              @id @default(autoincrement())
-  name      RoleName           @unique
+  name      RoleName         @unique
   rolePerms RolePermission[] // default permissions of this role
-  userRoles UserRole[]
+  User      User[]
 }
 
 //////////////////////////////
@@ -84,15 +56,34 @@ model RolePermission {
   @@id([roleId, permissionId])
 }
 
-//////////////////////////////
-// UserRole (users can have multiple roles)
-//////////////////////////////
-model UserRole {
-  userId String @unique
-  roleId Int
-  
-  user   User   @relation(fields: [userId], references: [id])
-  role   Role   @relation(fields: [roleId], references: [id])
+model User {
+  id                String    @id @default(uuid()) // PK
+  email             String    @unique // unique email
+  username          String?   @unique // optional, unique if set
+  password          String // hashed password
+  role              RoleName
+  roleInfo          Role      @relation(fields: [role], references: [name])
+  createdAt         DateTime  @default(now()) @map("created_at")
+  changedPasswordAt DateTime? @map("changed_password_at")
+
+  isSystem Boolean @default(false) @map("is_system")
+  isActive Boolean @default(true) @map("is_active")
+
+  // Relations
+  permissions       UserPermission[] // many permissions
+  deniedPermissions UserDeniedPermission[] // many denied perms
+  refreshTokens     RefreshToken[] // many sessions
+
+  // ✅ User must always have UserInfo
+  userInfo UserInfo?
+}
+
+model UserInfo {
+  userId     String  @id // PK = FK to User.id
+  user       User    @relation(fields: [userId], references: [id])
+  firstName  String  @map("first_name")
+  middleName String? @map("middle_name")
+  lastName   String  @map("last_name")
 }
 
 //////////////////////////////
@@ -115,6 +106,7 @@ model UserDeniedPermission {
   userId       String
   permission   Permission @relation(fields: [permissionId], references: [id])
   permissionId Int
+
   @@id([userId, permissionId])
 }
 

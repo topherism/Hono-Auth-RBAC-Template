@@ -2,11 +2,10 @@ import { prisma } from "@/db/client";
 import type { RoleName, User, UserInfo } from "@prisma/client";
 
 // Remove the password from User
-export type SafeUser = Omit<User, "password">;
+export type SafeUser = Omit<User, "password" | "changedPasswordAt">;
 
 export type UserWithInfo = SafeUser & {
   userInfo: UserInfo | null;
-  role: RoleName | null;
 };
 
 export const UserRepository = {
@@ -24,6 +23,7 @@ export const UserRepository = {
         email: input.email,
         username: input.username,
         password: input.password,
+        role: input.role,
         userInfo: {
           create: {
             firstName: input.first_name,
@@ -31,21 +31,9 @@ export const UserRepository = {
             lastName: input.last_name,
           },
         },
-        role: {
-          create: {
-            role: {
-              connect: { name: input.role },
-            },
-          },
-        },
       },
       include: {
         userInfo: true,
-        role: {
-          select: {
-            role: { select: { name: true } },
-          },
-        },
       },
     });
 
@@ -62,22 +50,12 @@ export const UserRepository = {
         createdAt: true,
         isSystem: true,
         isActive: true,
+        role: true,
         userInfo: true,
-        role: {
-          select: {
-            role: {
-              select: { name: true },
-            },
-          },
-        },
       },
     });
 
-    // Flatten the role structure
-    return users.map((user) => ({
-      ...user,
-      role: user.role?.role.name ?? null,
-    }));
+    return users;
   },
 
   async findUserWithInfoById(id: string): Promise<UserWithInfo | null> {
@@ -91,25 +69,14 @@ export const UserRepository = {
         isSystem: true,
         isActive: true,
         userInfo: true,
-        role: {
-          select: {
-            role: {
-              select: { name: true },
-            },
-          },
-        },
+        role: true,
       },
       where: { id },
     });
 
     if (!user) return null;
 
-    const { role, ...rest } = user;
-
-    return {
-      ...rest,
-      role: role?.role.name ?? null, // flatten safely
-    };
+    return user;
   },
 
   async findUserWithInfoByEmail(email: string): Promise<UserWithInfo | null> {
@@ -123,25 +90,14 @@ export const UserRepository = {
         isSystem: true,
         isActive: true,
         userInfo: true,
-        role: {
-          select: {
-            role: {
-              select: { name: true },
-            },
-          },
-        },
+        role: true,
       },
       where: { email },
     });
 
     if (!user) return null;
 
-    const { role, ...rest } = user;
-
-    return {
-      ...rest,
-      role: role?.role.name ?? null, // flatten safely
-    };
+    return user;
   },
 
   async findUserWithInfoByUsername(
@@ -157,24 +113,13 @@ export const UserRepository = {
         isSystem: true,
         isActive: true,
         userInfo: true,
-        role: {
-          select: {
-            role: {
-              select: { name: true },
-            },
-          },
-        },
+        role: true,
       },
       where: { username },
     });
 
     if (!user) return null;
 
-    const { role, ...rest } = user;
-
-    return {
-      ...rest,
-      role: role?.role.name ?? null, // flatten safely
-    };
+    return user;
   },
 };
