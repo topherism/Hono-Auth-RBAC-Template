@@ -18,6 +18,8 @@ export const authorizeMiddleware =
     //   allowed.includes(p)
     // );
 
+    console.log(hasRole);
+
     if (!hasRole) { //hasPermission
       throw new AppError(HttpStatusCodes.FORBIDDEN, "Access denied");
     }

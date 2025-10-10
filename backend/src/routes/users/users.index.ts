@@ -16,7 +16,7 @@ const router = createRouter();
 router.use(
   routes.getAllUser.path,
   authenticationMiddleware,
-  authorizeMiddleware(ROLES.ADMIN)
+  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN)
 );
 router.openapi(routes.getAllUser, handlers.getAllUsers);
 router.openapi(routes.createUser, handlers.createUser);
