@@ -9,7 +9,7 @@ export const authorizeMiddleware =
   (...allowed: AllowedType[]) =>
   async (c: Context, next: Next) => {
     const user = c.get("user");
-    console.log(user);
+
     if (!user)
       throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Not authenticated");
 
@@ -17,8 +17,6 @@ export const authorizeMiddleware =
     // const hasPermission = user.permissions.some((p: string) =>
     //   allowed.includes(p)
     // );
-
-    console.log(hasRole);
 
     if (!hasRole) { //hasPermission
       throw new AppError(HttpStatusCodes.FORBIDDEN, "Access denied");
