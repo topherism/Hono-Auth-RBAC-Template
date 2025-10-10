@@ -10,12 +10,15 @@ export const authorizeMiddleware =
   async (c: Context, next: Next) => {
     const user = c.get("user");
     console.log(user);
-    if (!user) throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Not authenticated");
+    if (!user)
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Not authenticated");
 
-    const hasRole = user.roles.some((r: string) => allowed.includes(r));
-    const hasPermission = user.permissions.some((p: string) => allowed.includes(p));
+    const hasRole = allowed.includes(user.role);
+    // const hasPermission = user.permissions.some((p: string) =>
+    //   allowed.includes(p)
+    // );
 
-    if (!hasRole && !hasPermission) {
+    if (!hasRole) { //hasPermission
       throw new AppError(HttpStatusCodes.FORBIDDEN, "Access denied");
     }
 

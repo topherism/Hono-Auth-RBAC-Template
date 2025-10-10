@@ -2,9 +2,7 @@ import { prisma } from "@/db/client";
 import type { RoleName, User, UserInfo } from "@prisma/client";
 
 // Remove the password from User
-export type SafeUser = Omit<User, "password" | "changedPasswordAt">;
-
-export type UserWithInfo = SafeUser & {
+export type UserWithInfo = User & {
   userInfo: UserInfo | null;
 };
 
@@ -43,14 +41,7 @@ export const UserRepository = {
 
   async findAllUserWithInfo() {
     const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        createdAt: true,
-        isSystem: true,
-        isActive: true,
-        role: true,
+      include: {
         userInfo: true,
       },
     });
@@ -60,16 +51,8 @@ export const UserRepository = {
 
   async findUserWithInfoById(id: string): Promise<UserWithInfo | null> {
     const user = await prisma.user.findFirst({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        createdAt: true,
-        changedPasswordAt: true,
-        isSystem: true,
-        isActive: true,
+      include: {
         userInfo: true,
-        role: true,
       },
       where: { id },
     });
@@ -81,16 +64,8 @@ export const UserRepository = {
 
   async findUserWithInfoByEmail(email: string): Promise<UserWithInfo | null> {
     const user = await prisma.user.findFirst({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        createdAt: true,
-        changedPasswordAt: true,
-        isSystem: true,
-        isActive: true,
+      include: {
         userInfo: true,
-        role: true,
       },
       where: { email },
     });
@@ -104,16 +79,8 @@ export const UserRepository = {
     username?: string | null
   ): Promise<UserWithInfo | null> {
     const user = await prisma.user.findFirst({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        createdAt: true,
-        changedPasswordAt: true,
-        isSystem: true,
-        isActive: true,
+      include: {
         userInfo: true,
-        role: true,
       },
       where: { username },
     });

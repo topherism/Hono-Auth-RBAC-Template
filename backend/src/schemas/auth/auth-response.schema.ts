@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@hono/zod-openapi";
+import { UserInfoSchema } from "../users";
+import { RoleSchema } from "../roles-permissions/role.schema";
 
 extendZodWithOpenApi(z);
 
@@ -7,9 +9,9 @@ const user = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
   username: z.string().nullable(),
-  firstName: z.string(),
-  middleName: z.string().nullable(),
-  lastName: z.string(),
+  createdAt: z.string().datetime(),
+  userInfo: UserInfoSchema,
+  role: RoleSchema,
 });
 
 // ✅ Auth Response Schema

@@ -24,21 +24,15 @@ export const AuthService = {
 
     // Generate tokens
     const { accessToken, refreshToken, jti, refreshTokenExp } =
-      await generateToken(user.id);
+      await generateToken(user.id, user.role);
 
     // Save refresh token in DB
     await AuthRepository.createRefreshToken(user.id, refreshTokenExp, jti);
 
     // Return result to handler
+    const { password: pass, ...safeUser } = user;
     return {
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        firstName: user.userInfo!.firstName,
-        middleName: user.userInfo?.middleName ?? null,
-        lastName: user.userInfo!.lastName,
-      },
+      user: safeUser,
       tokens: { accessToken, refreshToken },
     };
   },
@@ -67,7 +61,7 @@ export const AuthService = {
       refreshToken: newRefreshToken,
       jti,
       refreshTokenExp,
-    } = await generateToken(tokenRecord.userId);
+    } = await generateToken(tokenRecord.userId, payload.role);
 
     // Save new refresh token and delete old one
     await AuthRepository.deleteRefreshToken(refreshToken);

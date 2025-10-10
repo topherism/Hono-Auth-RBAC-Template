@@ -7,7 +7,7 @@ import type { JWTPayload } from "hono/utils/jwt/types";
 
 export interface DefineJWT extends JWTPayload {
   sub: string; // subject = userId
-  role?: Role; // optional custom claim
+  role: Role; // optional custom claim
   type: "access" | "refresh";
   jti?: string;
 }
@@ -15,7 +15,7 @@ export interface DefineJWT extends JWTPayload {
 const ISSUER = "bun-hono-name";
 const AUDIENCE = "bun-hono-users";
 
-export const generateToken = async (userId: string) => {
+export const generateToken = async (userId: string, role: Role) => {
   const access_token_secret = envConfig.JWT_ACCESS_SECRET;
   const refresh_token_secret = envConfig.JWT_REFRESH_SECRET;
 
@@ -29,6 +29,7 @@ export const generateToken = async (userId: string) => {
 
   const accessPayload: DefineJWT = {
     sub: userId,
+    role,
     iat: now,
     exp: accessExp,
     type: "access",
@@ -37,6 +38,7 @@ export const generateToken = async (userId: string) => {
   }; // 5 mins
   const refreshPayload: DefineJWT = {
     sub: userId,
+    role,
     iat: now,
     exp: refreshExp,
     type: "refresh", // 1 day
