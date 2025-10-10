@@ -32,13 +32,7 @@ export async function seedSuperAdmin() {
         username: superAdminUsername,
         password: hashedPassword,
         isSystem: true, // 🚨 mark as system account
-        roles: {
-          create: {
-            role: {
-              connect: { name: ROLES.SUPERADMIN }, // attach Admin role
-            },
-          },
-        },
+        role: ROLES.SUPERADMIN, // attach Admin role
         userInfo: {
           create: {
             firstName: "Super",
@@ -59,9 +53,7 @@ export async function seedSuperAdmin() {
   const technicalUsername = envConfig.TECHNICAL_USERNAME;
   const technicalPassword = envConfig.TECHNICAL_TEMP_PASSWORD; // ⚠️ Change after first login!
 
-  let technical = await UserRepository.findUserWithInfoByEmail(
-    technicalEmail
-  );
+  let technical = await UserRepository.findUserWithInfoByEmail(technicalEmail);
 
   // If not found by email, check by username
   if (!technical) {
@@ -81,13 +73,7 @@ export async function seedSuperAdmin() {
         username: technicalUsername,
         password: hashedPassword,
         isSystem: true, // 🚨 mark as system account
-        roles: {
-          create: {
-            role: {
-              connect: { name: ROLES.TECHNICAL }, // attach Admin role
-            },
-          },
-        },
+        role: ROLES.TECHNICAL, // attach Admin role
         userInfo: {
           create: {
             firstName: "Technical",
@@ -101,6 +87,4 @@ export async function seedSuperAdmin() {
   } else {
     logger.info("Technical already exists.");
   }
-
-
 }
