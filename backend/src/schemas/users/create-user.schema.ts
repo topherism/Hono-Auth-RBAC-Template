@@ -1,4 +1,6 @@
+import { ROLES, type Role } from "@/constants/roles";
 import { z } from "zod";
+import { RoleSchema } from "../roles-permissions/role.schema";
 
 export const CreateUserSchema = z
   .object({
@@ -29,6 +31,7 @@ export const CreateUserSchema = z
       example: "Dela Cruz",
       description: "Last Name of User",
     }),
+    role: RoleSchema,
   })
   .openapi("CreateUserSchema");
 

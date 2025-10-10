@@ -25,7 +25,7 @@ model User {
   isActive Boolean @default(true) @map("is_active")
 
   // Relations
-  roles             UserRole[] // many roles
+  role              UserRole? // single role
   permissions       UserPermission[] // many permissions
   deniedPermissions UserDeniedPermission[] // many denied perms
   refreshTokens     RefreshToken[] // many sessions
@@ -45,9 +45,18 @@ model UserInfo {
 //////////////////////////////
 // Roles
 //////////////////////////////
+enum RoleName {
+  superadmin
+  technical
+  admin
+  coordinator
+  borrower
+  viewer
+}
+
 model Role {
   id        Int              @id @default(autoincrement())
-  name      String           @unique
+  name      RoleName           @unique
   rolePerms RolePermission[] // default permissions of this role
   userRoles UserRole[]
 }
@@ -79,12 +88,11 @@ model RolePermission {
 // UserRole (users can have multiple roles)
 //////////////////////////////
 model UserRole {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  role   Role   @relation(fields: [roleId], references: [id])
+  userId String @unique
   roleId Int
   
-  @@id([userId, roleId])
+  user   User   @relation(fields: [userId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
 }
 
 //////////////////////////////

@@ -5,11 +5,15 @@ import { BcryptHelper } from "@/utils/hash";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
+import { UserRoleRepository } from "@/repositories/user-role.repository";
+import { RoleRepository } from "@/repositories/role.repository";
 
 export const UserService = {
   async createUser(input: CreateUserInput) {
     // Check email
-    const existingEmail = await UserRepository.findUserWithInfoByEmail(input.email);
+    const existingEmail = await UserRepository.findUserWithInfoByEmail(
+      input.email
+    );
     if (existingEmail) {
       throw new AppError(HttpStatusCodes.CONFLICT, "Email already in use");
     }
@@ -35,17 +39,22 @@ export const UserService = {
       middle_name: input.middle_name ?? null, // ✅ always null, not undefined
     });
 
+    if (!user) {
+      throw new AppError(
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+        HttpStatusPhrases.INTERNAL_SERVER_ERROR
+      );
+    }
+    console.log("Created user:", user);
 
-    // Hide password
-    const { password, ...safeUser } = user;
-    return safeUser;
+    return user;
   },
 
-  async getAllUsersWithInfo() {
+  async getAllUsers() {
     const users = await UserRepository.findAllUserWithInfo();
 
     // remove sensitive fields like password
-    return users.map(({ password, ...rest }) => rest);
+    return users;
   },
 
   async getOneUser(id: string) {
@@ -53,8 +62,6 @@ export const UserService = {
 
     if (!user) throw new AppError(HttpStatusCodes.NOT_FOUND, "User not found"); // user not found
 
-    // Remove sensitive fields
-    const { password, ...rest } = user;
-    return rest;
+    return user;
   },
 };

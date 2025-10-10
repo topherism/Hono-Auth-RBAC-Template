@@ -52,4 +52,55 @@ export async function seedSuperAdmin() {
   } else {
     logger.info("SUPERADMIN already exists.");
   }
+
+  //technical account
+
+  const technicalEmail = envConfig.TECHNICAL_EMAIL;
+  const technicalUsername = envConfig.TECHNICAL_USERNAME;
+  const technicalPassword = envConfig.TECHNICAL_TEMP_PASSWORD; // ⚠️ Change after first login!
+
+  let technical = await UserRepository.findUserWithInfoByEmail(
+    technicalEmail
+  );
+
+  // If not found by email, check by username
+  if (!technical) {
+    technical = await UserRepository.findUserWithInfoByUsername(
+      technicalUsername
+    );
+  }
+
+  if (!technical) {
+    logger.info("Creating Technical account...");
+
+    const hashedPassword = await BcryptHelper.hash(technicalPassword);
+
+    await prisma.user.create({
+      data: {
+        email: technicalEmail,
+        username: technicalUsername,
+        password: hashedPassword,
+        isSystem: true, // 🚨 mark as system account
+        roles: {
+          create: {
+            role: {
+              connect: { name: ROLES.TECHNICAL }, // attach Admin role
+            },
+          },
+        },
+        userInfo: {
+          create: {
+            firstName: "Technical",
+            lastName: "Account",
+          },
+        },
+      },
+    });
+
+    logger.info("✅ Technical account created.");
+  } else {
+    logger.info("Technical already exists.");
+  }
+
+
 }

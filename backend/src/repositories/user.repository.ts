@@ -1,7 +1,13 @@
 import { prisma } from "@/db/client";
-import type { User, UserInfo, UserRole } from "@prisma/client";
+import type { RoleName, User, UserInfo } from "@prisma/client";
 
-export type UserWithInfo = User & { userInfo: UserInfo | null };
+// Remove the password from User
+export type SafeUser = Omit<User, "password">;
+
+export type UserWithInfo = SafeUser & {
+  userInfo: UserInfo | null;
+  role: RoleName | null;
+};
 
 export const UserRepository = {
   async createUserWithInfo(input: {
@@ -11,7 +17,7 @@ export const UserRepository = {
     first_name: string;
     middle_name?: string | null;
     last_name: string;
-    role: string;
+    role: RoleName;
   }): Promise<UserWithInfo> {
     const user = await prisma.user.create({
       data: {
@@ -25,8 +31,22 @@ export const UserRepository = {
             lastName: input.last_name,
           },
         },
+        role: {
+          create: {
+            role: {
+              connect: { name: input.role },
+            },
+          },
+        },
       },
-      include: { userInfo: true },
+      include: {
+        userInfo: true,
+        role: {
+          select: {
+            role: { select: { name: true } },
+          },
+        },
+      },
     });
 
     // At runtime, userInfo is guaranteed because you always create it
@@ -34,44 +54,127 @@ export const UserRepository = {
   },
 
   async findAllUserWithInfo() {
-    return prisma.user.findMany({
-      include: {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+        isSystem: true,
+        isActive: true,
         userInfo: true,
-      },
-      orderBy: {
-        createdAt: "desc",
+        role: {
+          select: {
+            role: {
+              select: { name: true },
+            },
+          },
+        },
       },
     });
+
+    // Flatten the role structure
+    return users.map((user) => ({
+      ...user,
+      role: user.role?.role.name ?? null,
+    }));
   },
 
   async findUserWithInfoById(id: string): Promise<UserWithInfo | null> {
-    return prisma.user.findFirst({
-      include: {
+    const user = await prisma.user.findFirst({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+        changedPasswordAt: true,
+        isSystem: true,
+        isActive: true,
         userInfo: true,
+        role: {
+          select: {
+            role: {
+              select: { name: true },
+            },
+          },
+        },
       },
       where: { id },
     });
+
+    if (!user) return null;
+
+    const { role, ...rest } = user;
+
+    return {
+      ...rest,
+      role: role?.role.name ?? null, // flatten safely
+    };
   },
 
   async findUserWithInfoByEmail(email: string): Promise<UserWithInfo | null> {
-    return prisma.user.findFirst({
-      include: {
+    const user = await prisma.user.findFirst({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+        changedPasswordAt: true,
+        isSystem: true,
+        isActive: true,
         userInfo: true,
+        role: {
+          select: {
+            role: {
+              select: { name: true },
+            },
+          },
+        },
       },
       where: { email },
     });
+
+    if (!user) return null;
+
+    const { role, ...rest } = user;
+
+    return {
+      ...rest,
+      role: role?.role.name ?? null, // flatten safely
+    };
   },
 
   async findUserWithInfoByUsername(
     username?: string | null
   ): Promise<UserWithInfo | null> {
-    if (!username) return null;
-    return prisma.user.findFirst({
-      include: {
+    const user = await prisma.user.findFirst({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+        changedPasswordAt: true,
+        isSystem: true,
+        isActive: true,
         userInfo: true,
+        role: {
+          select: {
+            role: {
+              select: { name: true },
+            },
+          },
+        },
       },
       where: { username },
     });
-  },
 
+    if (!user) return null;
+
+    const { role, ...rest } = user;
+
+    return {
+      ...rest,
+      role: role?.role.name ?? null, // flatten safely
+    };
+  },
 };
