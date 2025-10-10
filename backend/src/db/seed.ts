@@ -1,15 +1,12 @@
 import { prisma } from "./client";
 import { seedRolesAndPermissions } from "./seeds/roles-permissions";
-import { seedSuperAdmin } from "./seeds/superadmin-technical";
+import { seedSuperAdminAndTechnical } from "./seeds/superadmin-technical";
 
 async function main() {
   console.log("🌱 Starting database seed...");
 
   await seedRolesAndPermissions();
-  await seedSuperAdmin();
-  // later you can add more:
-  // await seedUsers();
-  // await seedDemoData();
+  await seedSuperAdminAndTechnical();
 
   console.log("🌱 Seeding finished.");
 }

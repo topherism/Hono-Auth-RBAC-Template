@@ -5,7 +5,7 @@ import envConfig from "@/env";
 import { logger } from "@/utils/logger";
 import { UserRepository } from "@/repositories/user.repository";
 
-export async function seedSuperAdmin() {
+export async function seedSuperAdminAndTechnical() {
   const superAdminEmail = envConfig.SUPERADMIN_EMAIL;
   const superAdminUsername = envConfig.SUPERADMIN_USERNAME;
   const superAdminPassword = envConfig.SUPERADMIN_TEMP_PASSWORD; // ⚠️ Change after first login!
