@@ -4,9 +4,10 @@ import {
   UserListResponseSchema,
   UserResponseSchema,
 } from "@/schemas/users";
+import { PatchUserResponseSchema, PatchUserSchema } from "@/schemas/users/patch-user.schema";
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
+import { jsonContent, jsonContentOneOf, jsonContentRequired } from "stoker/openapi/helpers";
 import {
   createErrorSchema,
   createMessageObjectSchema,
@@ -52,6 +53,7 @@ export const getAllUser = createRoute({
 export const getOneUser = createRoute({
   path: "/users/{id}",
   method: "get",
+  tags,
   request: {
     params: IdUUIDParamsSchema,
   },
@@ -65,6 +67,31 @@ export const getOneUser = createRoute({
   },
 })
 
+
+
+
+export const patchUser = createRoute({
+  path: "/users/{id}",
+  method: "patch",
+  tags,
+  request: {
+    params: IdUUIDParamsSchema,
+    body: jsonContentRequired(PatchUserSchema, "Partial user update"),
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(PatchUserResponseSchema, "The updated user"),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User not found"),
+
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
+      [createErrorSchema(PatchUserSchema), createErrorSchema(IdUUIDParamsSchema)],
+      "The validation error(s)"
+    ),
+    [HttpStatusCodes.CONFLICT]: jsonContent(
+      createMessageObjectSchema("Email or username already in use"),
+      "Conflict error"
+    ),
+  },
+});
 
 // export const patch = createRoute({
 //   path: "/tasks/{id}",
@@ -89,3 +116,4 @@ export const getOneUser = createRoute({
 export type CreateUserRoute = typeof createUser;
 export type GetAllUserRoute = typeof getAllUser;
 export type GetOneUserRoute = typeof getOneUser;
+export type PatchRoute = typeof patchUser;

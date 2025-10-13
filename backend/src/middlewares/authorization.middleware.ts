@@ -10,6 +10,8 @@ export const authorizeMiddleware =
   async (c: Context, next: Next) => {
     const user = c.get("user");
 
+    console.log(user);
+
     if (!user)
       throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Not authenticated");
 

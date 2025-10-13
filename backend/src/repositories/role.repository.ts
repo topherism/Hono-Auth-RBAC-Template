@@ -7,11 +7,11 @@ export const RoleRepository = {
     return prisma.role.findMany();
   },
 
-  async checkRole(roleId: number) {
+  async findRoleById(roleId: number) {
     return prisma.role.findUnique({ where: { id: roleId } });
   },
 
-  async getRoleId(roleName: RoleName) {
+  async findRoleByName(roleName: RoleName) {
     return prisma.role.findUnique({
       where: { name: roleName },
     });

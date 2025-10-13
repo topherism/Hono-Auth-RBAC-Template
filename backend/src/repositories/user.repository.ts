@@ -1,5 +1,5 @@
 import { prisma } from "@/db/client";
-import type { RoleName, User, UserInfo } from "@prisma/client";
+import type { Prisma, RoleName, User, UserInfo } from "@prisma/client";
 
 // Remove the password from User
 export type UserWithInfo = User & {
@@ -37,6 +37,17 @@ export const UserRepository = {
 
     // At runtime, userInfo is guaranteed because you always create it
     return user as UserWithInfo;
+  },
+
+  async updateUser(id: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({
+      where: { id },
+      data,
+      include: {
+        userInfo: true,
+        roleInfo: true,
+      },
+    });
   },
 
   async findAllUserWithInfo() {

@@ -6,6 +6,7 @@ import {
   CreateUserRoute,
   GetAllUserRoute,
   GetOneUserRoute,
+  PatchRoute,
 } from "./users.routes";
 import { UserService } from "@/services/user.service";
 
@@ -26,22 +27,11 @@ export const getOneUser: AppRouteHandler<GetOneUserRoute> = async (c) => {
   return c.json(user, HttpStatusCodes.OK);
 };
 
-// export const patchUser: AppRouteHandler<PatchRoute> = async (c) => {
-//   const { id } = c.req.valid("param");
-//   const updates = c.req.valid("json");
-//   const [task] = await db
-//     .update(tasks)
-//     .set(updates)
-//     .where(eq(tasks.id, id))
-//     .returning();
+export const patchUser: AppRouteHandler<PatchRoute> = async (c) => {
+  const { id } = c.req.valid("param");
+  const updates = c.req.valid("json");
 
-//   if (!task) {
-//     return c.json(
-//       {
-//         message: HttpStatusPhrases.NOT_FOUND,
-//       },
-//       HttpStatusCodes.NOT_FOUND
-//     );
-//   }
-//   return c.json(task, HttpStatusCodes.OK);
-// };
+  const patchedUser = await UserService.patchUser(id, updates);
+
+  return c.json(patchedUser, HttpStatusCodes.OK);
+};
