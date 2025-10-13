@@ -2,6 +2,7 @@ import { prisma } from "../client";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
 import { ROLE_PERMISSIONS } from "@/constants/role-permissions";
+import { RoleName } from "@prisma/client";
 
 export async function seedRolesAndPermissions() {
   console.log("➡️ Seeding roles & permissions...");
@@ -26,11 +27,15 @@ export async function seedRolesAndPermissions() {
 
   // 3. RolePermissions
   for (const [roleName, perms] of Object.entries(ROLE_PERMISSIONS)) {
-    const role = await prisma.role.findUnique({ where: { name: roleName } });
+    const role = await prisma.role.findUnique({
+      where: { name: roleName as RoleName },
+    });
     if (!role) continue;
 
     for (const permName of perms) {
-      const perm = await prisma.permission.findUnique({ where: { name: permName } });
+      const perm = await prisma.permission.findUnique({
+        where: { name: permName },
+      });
       if (!perm) continue;
 
       await prisma.rolePermission.upsert({

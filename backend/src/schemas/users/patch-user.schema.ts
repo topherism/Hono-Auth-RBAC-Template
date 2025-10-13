@@ -37,7 +37,7 @@ export const PatchUserSchema = z.object({
     example: true,
     description: "Indicates if the user is active",
   }),
-});
+}).openapi("PatchUserSchema");
 
 export const PatchUserResponseSchema = PatchUserSchema.extend({
   id: z.string().uuid().openapi({ example: "uuid" }),

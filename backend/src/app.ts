@@ -6,7 +6,6 @@ import users from "@/routes/users/users.index";
 
 const app = createApp();
 
-
 const routes = [auth, users];
 
 configureOpenAPI(app);

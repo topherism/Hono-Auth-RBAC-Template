@@ -3,11 +3,16 @@ import {
   CreateUserSchema,
   UserListResponseSchema,
   UserResponseSchema,
+  PatchUserResponseSchema,
+  PatchUserSchema,
 } from "@/schemas/users";
-import { PatchUserResponseSchema, PatchUserSchema } from "@/schemas/users/patch-user.schema";
 import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { jsonContent, jsonContentOneOf, jsonContentRequired } from "stoker/openapi/helpers";
+import {
+  jsonContent,
+  jsonContentOneOf,
+  jsonContentRequired,
+} from "stoker/openapi/helpers";
 import {
   createErrorSchema,
   createMessageObjectSchema,
@@ -21,6 +26,13 @@ export const createUser = createRoute({
   path: "/users",
   method: "post",
   tags,
+  summary: "Create a new user account",
+  description: `
+    This endpoint allows admins to create new users.
+    You must provide a unique email and valid role.
+  `,
+  security: [{ BearerAuth: [] }],
+  operationId: "createUser",
   request: {
     body: jsonContentRequired(CreateUserSchema, "Create a new user"),
   },
@@ -57,7 +69,7 @@ export const getOneUser = createRoute({
   request: {
     params: IdUUIDParamsSchema,
   },
-    responses: {
+  responses: {
     [HttpStatusCodes.OK]: jsonContent(UserResponseSchema, "The requested user"),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User Not Found"),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
@@ -65,10 +77,7 @@ export const getOneUser = createRoute({
       "Invalid Id Error"
     ),
   },
-})
-
-
-
+});
 
 export const patchUser = createRoute({
   path: "/users/{id}",
@@ -79,11 +88,17 @@ export const patchUser = createRoute({
     body: jsonContentRequired(PatchUserSchema, "Partial user update"),
   },
   responses: {
-    [HttpStatusCodes.OK]: jsonContent(PatchUserResponseSchema, "The updated user"),
+    [HttpStatusCodes.OK]: jsonContent(
+      PatchUserResponseSchema,
+      "The updated user"
+    ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User not found"),
 
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
-      [createErrorSchema(PatchUserSchema), createErrorSchema(IdUUIDParamsSchema)],
+      [
+        createErrorSchema(PatchUserSchema),
+        createErrorSchema(IdUUIDParamsSchema),
+      ],
       "The validation error(s)"
     ),
     [HttpStatusCodes.CONFLICT]: jsonContent(
@@ -92,25 +107,6 @@ export const patchUser = createRoute({
     ),
   },
 });
-
-// export const patch = createRoute({
-//   path: "/tasks/{id}",
-//   method: "patch",
-//   tags,
-//   request: {
-//     params: IdUUIDParamsSchema,
-//     body: jsonContentRequired(patchTasksSchema, "The tasks updates"),
-//   },
-//   responses: {
-//     [HttpStatusCodes.OK]: jsonContent(selectTasksSchema, "The updated task"),
-//     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Task Not Found"),
-
-//     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
-//       [createErrorSchema(patchTasksSchema), createErrorSchema(IdParamsSchema)],
-//       "The validation error(s)"
-//     ),
-//   },
-// });
 
 // Export route types for handlers
 export type CreateUserRoute = typeof createUser;

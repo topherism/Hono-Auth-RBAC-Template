@@ -10,7 +10,25 @@ import { StatusCode } from "hono/utils/http-status";
 import { csrf } from "hono/csrf";
 
 export function createRouter() {
-  return new OpenAPIHono<AppBindings>({ strict: false, defaultHook });
+  const app = new OpenAPIHono({
+    strict: false,
+    defaultHook
+  });
+
+  // Register the bearer security scheme in the OpenAPI components
+  // This is the supported/observed pattern in hono/zod-openapi examples.
+  app.openAPIRegistry.registerComponent(
+    "securitySchemes",
+    "BearerAuth", // the component name you will reference in route.security
+    {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+      description: "Provide `Bearer <token>`",
+    }
+  );
+
+  return app;
 }
 
 export default function createApp() {

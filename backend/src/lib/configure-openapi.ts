@@ -13,7 +13,18 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     info: {
       version: packageJSON.version,
       title: "TrackKIT API",
+      description: `
+        TrackKIT API documentation powered by Scalar.
+
+        All secured endpoints require a valid Bearer JWT token.
+        Use the 🔒 "Authorize" button to authenticate requests.
+      `,
+      contact: {
+        name: "Christopher Jay S. Manubay",
+        email: "christopherjay.manubay@gmail.com",
+      }
     },
+    security: [{BearerAuth: []}]
   });
 
   app.get(

@@ -1,13 +1,12 @@
 // src/services/user.service.ts
 import { UserRepository } from "@/repositories/user.repository";
-import { CreateUserInput } from "@/schemas/users";
+import { CreateUserInput, PatchUserInput } from "@/schemas/users";
 import { BcryptHelper } from "@/utils/hash";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 import { RoleRepository } from "@/repositories/role.repository";
 import { Prisma } from "@prisma/client";
-import { PatchUserInput } from "@/schemas/users/patch-user.schema";
 
 export const UserService = {
   async createUser(input: CreateUserInput) {
