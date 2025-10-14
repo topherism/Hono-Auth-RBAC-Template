@@ -13,11 +13,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [opened, setOpened] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  // Auto-collapse on mobile, restore on desktop
   useEffect(() => {
     setOpened(!isMobile); // collapsed on mobile, expanded on desktop
   }, [isMobile]);
-  console.log(opened);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 5500); // simulate
@@ -66,7 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {loading ? (
           <div
             style={{
-              position: "absolute",
+              position: "relative",
               inset: 0,
               display: "flex",
               alignItems: "center",

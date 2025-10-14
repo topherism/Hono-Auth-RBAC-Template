@@ -1,11 +1,12 @@
-import api from "@/config/axios";
+import axios from '../../../config/axios';
+import {type LoginFormValues } from '../components/LoginForm';
 
-export const login = async (credentials: { email: string; password: string }) => {
-  const { data } = await api.post("/auth/login", credentials);
-  return data; // expected { token, user }
-};
+interface LoginResponse {
+  user: { id: string; email: string; role: string };
+  token: string;
+}
 
-export const getProfile = async () => {
-  const { data } = await api.get("/auth/me");
-  return data; // user object
+export const loginApi = async (data: LoginFormValues): Promise<LoginResponse> => {
+  const response = await axios.post('/auth/login', data);
+  return response.data;
 };

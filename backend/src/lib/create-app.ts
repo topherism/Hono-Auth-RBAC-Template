@@ -8,6 +8,7 @@ import { defaultHook } from "stoker/openapi";
 import { AppError } from "./errors";
 import { StatusCode } from "hono/utils/http-status";
 import { csrf } from "hono/csrf";
+import { cors } from "hono/cors"; // ✅ ADD THIS
 
 export function createRouter() {
   const app = new OpenAPIHono({
@@ -33,6 +34,15 @@ export function createRouter() {
 
 export default function createApp() {
   const app = createRouter();
+
+    app.use(
+    cors({
+      origin: ["http://localhost:5173"], // or specify frontend URL e.g. "http://localhost:5173"
+      allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      allowHeaders: ["Content-Type", "Authorization"],
+      credentials: true, // enable if using cookies
+    })
+  );
   app.use(serveEmojiFavicon("🚀"));
   app.use(pinoLogger());
   app.use("/api/*", csrf());

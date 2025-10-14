@@ -20,8 +20,14 @@ router.use(
 );
 router.openapi(routes.getAllUser, handlers.getAllUsers);
 router.openapi(routes.createUser, handlers.createUser);
-router.openapi(routes.getOneUser, handlers.getOneUser);
 router.openapi(routes.patchUser, handlers.patchUser);
+
+router.use(
+  routes.getAllUser.path,
+  authenticationMiddleware,
+  authorizeMiddleware(ROLES.BORROWER)
+);
+router.openapi(routes.getOneUser, handlers.getOneUser);
 
 // Protected + role-based
 // router.use("/users/:id", authorizeMiddleware(ROLES.ADMIN));

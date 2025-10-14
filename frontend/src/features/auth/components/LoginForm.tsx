@@ -1,51 +1,52 @@
-// src/features/auth/components/LoginForm.tsx
-import { useState } from "react";
-import {
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Button,
-  Stack,
-} from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Stack, TextInput, PasswordInput, Button } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { z } from "zod";
+import { useLogin } from "../hooks/useLogin";
+import { zodResolver } from "mantine-form-zod-resolver";
+// 1️⃣ Zod schema
+const schema = z.object({
+  emailOrUsername: z.union([z.string().email(), z.string().min(3)]),
+  password: z.string().min(6),
+});
+
+export type LoginFormValues = z.infer<typeof schema>;
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const form = useForm<LoginFormValues>({
+    initialValues: {
+      emailOrUsername: "",
+      password: "",
+    },
+    validate: zodResolver(schema),
+  });
 
-  const navigate = useNavigate();
+  const { login, error } = useLogin();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: call login API or auth store
-    console.log("Login", { email, password, rememberMe });
-    navigate("/dashboard");
+  const handleSubmit = (values: LoginFormValues) => {
+    login(values);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput
-          label="Email"
+          label="Emaisl"
+          placeholder="you@example.com"
+          withAsterisk
           required
-          value={email}
-          onChange={(e) => setEmail(e.currentTarget.value)}
+          {...form.getInputProps("emailOrUsername")}
         />
         <PasswordInput
           label="Password"
-          
+          placeholder="Your password"
+          withAsterisk
           required
-          value={password}
-          onChange={(e) => setPassword(e.currentTarget.value)}
+          {...form.getInputProps("password")}
         />
-        <Checkbox
-          label="Remember me"
-          checked={rememberMe}
-          onChange={(e) => setRememberMe(e.currentTarget.checked)}
-        />
-
-        <Button type="submit" onClick={() => navigate("/dashboard")} fullWidth>
+        {error?.response?.data?.message && (
+          <p style={{ color: "red" }}>{error.response.data.message}</p>
+        )}
+        <Button type="submit" fullWidth>
           Sign in
         </Button>
       </Stack>
