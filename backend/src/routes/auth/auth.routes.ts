@@ -57,26 +57,3 @@ export const refresh = createRoute({
 export type LoginRoute = typeof login;
 export type RefreshRoute = typeof refresh;
 
-
-// export const register = createRoute({
-//   path: "/auth/register",
-//   method: "post",
-//   tags,
-//   request: {
-//     body: jsonContentRequired(RegisterSchema, "Register a new user"),
-//   },
-//   responses: {
-//     [HttpStatusCodes.CREATED]: jsonContent(
-//       AuthResponseSchema,
-//       "Register success"
-//     ),
-//     [HttpStatusCodes.CONFLICT]: jsonContent(
-//       createMessageObjectSchema("Email or username already exists"),
-//       "Email or username already exists"
-//     ),
-//     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-//       createErrorSchema(RegisterSchema),
-//       "The validation error(s)"
-//     ),
-//   },
-// });

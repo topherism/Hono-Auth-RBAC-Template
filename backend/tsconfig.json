@@ -15,7 +15,15 @@
     ],
     "strict": true,
     "outDir": "./dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    // "noImplicitAny": false,
+		// "lib": ["ES2019", "DOM", "DOM.Iterable"],
+		// "removeComments": false,
+		// "preserveConstEnums": true,
+		// "sourceMap": true,
+		// "esModuleInterop": true,
+		// "resolveJsonModule": true,
+		// "allowSyntheticDefaultImports": true,
   },
   "tsc-alias": {
     "resolveFullPaths": true
