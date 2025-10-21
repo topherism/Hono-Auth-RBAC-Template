@@ -2,12 +2,14 @@
 
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import { LoginRoute, RefreshRoute } from "./auth.routes";
+
+import { LoginRoute, LogoutAllRoute, LogoutRoute, RefreshRoute } from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
 import { refreshTokenCookie } from "@/utils/jwt";
 
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { AppError } from "@/lib/errors";
+import envConfig from "@/env";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");
@@ -26,14 +28,58 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
   );
 };
 
+export const logout: AppRouteHandler<LogoutRoute> = async (c) => {
+  const refreshToken = getCookie(c, "auth_refresh_token");
+
+  if (refreshToken) {
+    try {
+      await AuthService.logout(refreshToken);
+    } catch (err) {
+      console.log("Failed to revoke refresh token:", err);
+      // Still continue to clear cookie
+    }
+  }
+
+  deleteCookie(c, "auth_refresh_token", {
+    path: refreshTokenCookie.path,
+    secure: refreshTokenCookie.secure,
+    sameSite: refreshTokenCookie.sameSite,
+  });
+
+  return c.json({ message: "Logged out" }, HttpStatusCodes.OK);
+};
+
+export const logout_all: AppRouteHandler<LogoutAllRoute> = async (c) => {
+  const refreshToken = getCookie(c, "auth_refresh_token");
+
+  if (refreshToken) {
+    try {
+      await AuthService.logout_all(refreshToken);
+    } catch (err) {
+      console.log("Failed to revoke refresh token:", err);
+      // Still continue to clear cookie
+    }
+  }
+
+  deleteCookie(c, "auth_refresh_token", {
+    path: refreshTokenCookie.path,
+    secure: refreshTokenCookie.secure,
+    sameSite: refreshTokenCookie.sameSite,
+  });
+
+  return c.json({ message: "Logged out" }, HttpStatusCodes.OK);
+};
+
 export const refresh: AppRouteHandler<RefreshRoute> = async (c) => {
   // Get refresh token from cookie
   const refreshToken = getCookie(c, "auth_refresh_token");
 
   if (!refreshToken) {
-    throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid or expired refresh token");
+    throw new AppError(
+      HttpStatusCodes.UNAUTHORIZED,
+      "Invalid or expired refresh token"
+    );
   }
-
 
   const tokens = await AuthService.refresh(refreshToken);
   console.log(tokens, "got tokens");

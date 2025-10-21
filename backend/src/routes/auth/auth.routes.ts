@@ -32,6 +32,30 @@ export const login = createRoute({
   },
 });
 
+export const logout = createRoute({
+  path: "/auth/logout",
+  method: "post",
+  tags,
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      createMessageObjectSchema("Logged out"),
+      "Logout success"
+    ),
+  },
+});
+
+export const logout_all = createRoute({
+  path: "/auth/logout-all",
+  method: "post",
+  tags,
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      createMessageObjectSchema("Logged out"),
+      "Logout from all device/s success"
+    ),
+  },
+});
+
 export const refresh = createRoute({
   path: "/auth/refresh",
   method: "get",
@@ -53,7 +77,10 @@ export const refresh = createRoute({
   },
 });
 
+
 // Export route types for handlers
 export type LoginRoute = typeof login;
+export type LogoutRoute = typeof logout;
+export type LogoutAllRoute = typeof logout_all;
 export type RefreshRoute = typeof refresh;
 

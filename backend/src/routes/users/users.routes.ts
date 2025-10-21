@@ -26,7 +26,7 @@ export const createUser = createRoute({
   path: "/users",
   method: "post",
   tags,
-  summary: "Create a new user account",
+  // summary: "Create a new user account",
   description: `
     This endpoint allows admins to create new users.
     You must provide a unique email and valid role.

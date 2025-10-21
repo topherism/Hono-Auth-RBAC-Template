@@ -1,5 +1,7 @@
 import { Role } from "@/constants/roles";
 import envConfig from "@/env";
+import { AppError } from "@/lib/errors";
+import * as HttpStatusCodes from "stoker/http-status-codes";
 import { randomUUID } from "crypto";
 import { sign, verify } from "hono/jwt";
 import type { CookieOptions } from "hono/utils/cookie";
@@ -12,15 +14,15 @@ export interface DefineJWT extends JWTPayload {
   jti?: string;
 }
 
-const ISSUER = "bun-hono-name";
-const AUDIENCE = "bun-hono-users";
+const ISSUER = "node-hono-name";
+const AUDIENCE = "node-hono-users";
 
 export const generateToken = async (userId: string, role: Role) => {
   const access_token_secret = envConfig.JWT_ACCESS_SECRET;
   const refresh_token_secret = envConfig.JWT_REFRESH_SECRET;
 
   if (!access_token_secret || !refresh_token_secret) {
-    throw new Error("JWT secrets are not set in environment variables");
+    throw new AppError(HttpStatusCodes.INTERNAL_SERVER_ERROR, "JWT secrets are not set in environment variables");
   }
 
   const now = Math.floor(Date.now() / 1000);
@@ -79,12 +81,16 @@ export const verifyToken = async (token: string, secret: string) => {
 
   // Validate issuer
   if (payload.iss !== ISSUER) {
-    throw new Error(`Invalid issuer: expected ${ISSUER}, got ${payload.iss}`);
+    throw new AppError(
+      HttpStatusCodes.UNAUTHORIZED,
+      `Invalid issuer: expected ${ISSUER}, got ${payload.iss}`
+    );
   }
 
   // Validate audience
   if (payload.aud !== AUDIENCE) {
-    throw new Error(
+    throw new AppError(
+      HttpStatusCodes.UNAUTHORIZED,
       `Invalid audience: expected ${AUDIENCE}, got ${payload.aud}`
     );
   }

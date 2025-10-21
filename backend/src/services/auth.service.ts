@@ -3,8 +3,8 @@ import { AppError } from "@/lib/errors";
 import { AuthRepository } from "@/repositories/auth.repository";
 import { UserRepository } from "@/repositories/user.repository";
 import { BcryptHelper } from "@/utils/hash";
-import { generateToken, refreshTokenCookie, verifyToken } from "@/utils/jwt";
-import { verify } from "hono/utils/jwt/jwt";
+import { generateToken, verifyToken } from "@/utils/jwt";
+import { logger } from "@/utils/logger";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
 export const AuthService = {
@@ -35,6 +35,36 @@ export const AuthService = {
       user: safeUser,
       tokens: { accessToken, refreshToken },
     };
+  },
+
+  async logout(refreshToken: string) {
+    const payload = await verifyToken(
+      refreshToken,
+      envConfig.JWT_REFRESH_SECRET!
+    );
+
+    if (payload.type !== "refresh") {
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid token type");
+    }
+
+    await AuthRepository.deleteRefreshToken(payload.jti!);
+    logger.info("deleted refresh token")
+
+  },
+
+  async logout_all(refreshToken: string) {
+    const payload = await verifyToken(
+      refreshToken,
+      envConfig.JWT_REFRESH_SECRET!
+    );
+
+    if (payload.type !== "refresh") {
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid token type");
+    }
+
+    await AuthRepository.deleteRefreshTokenById(payload.sub!);
+    logger.info("deleted refresh token")
+
   },
 
   async refresh(refreshToken: string) {

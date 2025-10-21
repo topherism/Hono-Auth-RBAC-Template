@@ -8,7 +8,8 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
-      "@backend/*": ["../../backend/src/*"]
+      "@backend/*": ["../../backend/src/*"],
+      "@shared/*": ["../../shared/*"]
     },
       "types": ["node"],   // 👈 this line is the key
   } 

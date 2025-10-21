@@ -25,4 +25,10 @@ export const AuthRepository = {
       where: { jti },
     });
   },
+
+  async deleteRefreshTokenById(id: string) {
+    return prisma.refreshToken.deleteMany({
+      where: { userId: id },
+    });
+  },
 };

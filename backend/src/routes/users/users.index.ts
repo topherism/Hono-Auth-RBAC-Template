@@ -29,14 +29,4 @@ router.use(
 );
 router.openapi(routes.getOneUser, handlers.getOneUser);
 
-// Protected + role-based
-// router.use("/users/:id", authorizeMiddleware(ROLES.ADMIN));
-// router.openapi(routes.getOneUser, handlers.getOneUser);
-
-//   .openapi(routes.register, handlers.register)
-//   .openapi(routes.create, handlers.create)
-//   .openapi(routes.getOneList, handlers.getOneList)
-//   .openapi(routes.patch, handlers.patch)
-//   .openapi(routes.remove, handlers.remove);
-
 export default router;
