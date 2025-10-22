@@ -8,9 +8,16 @@ import { authenticationMiddleware } from "@/middlewares/authentication.middlewar
 import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
+import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 
 const router = createRouter();
 // Public route
+
+//applied all users rate limiter
+router.use(
+  "/api/users/*",
+  userRateLimiter
+);
 
 // Protected route → requires valid JWT
 router.use(
