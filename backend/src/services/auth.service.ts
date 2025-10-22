@@ -24,7 +24,7 @@ export const AuthService = {
 
     // Generate tokens
     const { accessToken, refreshToken, jti, refreshTokenExp } =
-      await generateToken(user.id, user.role);
+      await generateToken(user.id, user.role, user.tokenVersion);
 
     // Save refresh token in DB
     await AuthRepository.createRefreshToken(user.id, refreshTokenExp, jti);
@@ -48,8 +48,7 @@ export const AuthService = {
     }
 
     await AuthRepository.deleteRefreshToken(payload.jti!);
-    logger.info("deleted refresh token")
-
+    logger.info("deleted refresh token");
   },
 
   async logout_all(refreshToken: string) {
@@ -62,9 +61,16 @@ export const AuthService = {
       throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid token type");
     }
 
-    await AuthRepository.deleteRefreshTokenById(payload.sub!);
-    logger.info("deleted refresh token")
+    // await AuthRepository.deleteRefreshTokenById(payload.sub!);
+    // logger.info("deleted refresh token")
 
+    // 🔥 Increment token version to revoke all existing access tokens
+    await UserRepository.incrementTokenVersion(payload.sub!);
+
+    // Delete all refresh tokens in DB
+    await AuthRepository.deleteRefreshTokenById(payload.sub!);
+
+    logger.info("Deleted all refresh tokens and incremented token version");
   },
 
   async refresh(refreshToken: string) {
@@ -75,8 +81,6 @@ export const AuthService = {
       envConfig.JWT_REFRESH_SECRET!
     );
 
-    console.log(payload, "payload123");
-
     const tokenRecord = await AuthRepository.findRefreshToken(payload.jti!);
     if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
       throw new AppError(
@@ -85,16 +89,18 @@ export const AuthService = {
       );
     }
 
+    const user = await UserRepository.findUserWithInfoById(tokenRecord.userId);
+
     // Generate new access token (and optionally new refresh token)
     const {
       accessToken,
       refreshToken: newRefreshToken,
       jti,
       refreshTokenExp,
-    } = await generateToken(tokenRecord.userId, payload.role);
+    } = await generateToken(tokenRecord.userId, user!.role, user!.tokenVersion);
 
     // Save new refresh token and delete old one
-    await AuthRepository.deleteRefreshToken(refreshToken);
+    await AuthRepository.deleteRefreshToken(payload.jti!);
     await AuthRepository.createRefreshToken(
       tokenRecord.userId,
       refreshTokenExp,

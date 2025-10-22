@@ -6,10 +6,12 @@ import { randomUUID } from "crypto";
 import { sign, verify } from "hono/jwt";
 import type { CookieOptions } from "hono/utils/cookie";
 import type { JWTPayload } from "hono/utils/jwt/types";
+import { UserRepository } from "@/repositories/user.repository";
 
 export interface DefineJWT extends JWTPayload {
   sub: string; // subject = userId
   role: Role; // optional custom claim
+  tokenVersion: number;
   type: "access" | "refresh";
   jti?: string;
 }
@@ -17,12 +19,19 @@ export interface DefineJWT extends JWTPayload {
 const ISSUER = "node-hono-name";
 const AUDIENCE = "node-hono-users";
 
-export const generateToken = async (userId: string, role: Role) => {
+export const generateToken = async (
+  userId: string,
+  role: Role,
+  tokenVersion: number
+) => {
   const access_token_secret = envConfig.JWT_ACCESS_SECRET;
   const refresh_token_secret = envConfig.JWT_REFRESH_SECRET;
 
   if (!access_token_secret || !refresh_token_secret) {
-    throw new AppError(HttpStatusCodes.INTERNAL_SERVER_ERROR, "JWT secrets are not set in environment variables");
+    throw new AppError(
+      HttpStatusCodes.INTERNAL_SERVER_ERROR,
+      "JWT secrets are not set in environment variables"
+    );
   }
 
   const now = Math.floor(Date.now() / 1000);
@@ -31,6 +40,7 @@ export const generateToken = async (userId: string, role: Role) => {
 
   const accessPayload: DefineJWT = {
     sub: userId,
+    tokenVersion,
     role,
     iat: now,
     exp: accessExp,
@@ -40,6 +50,7 @@ export const generateToken = async (userId: string, role: Role) => {
   }; // 5 mins
   const refreshPayload: DefineJWT = {
     sub: userId,
+    tokenVersion,
     role,
     iat: now,
     exp: refreshExp,
@@ -78,6 +89,11 @@ export const refreshTokenCookie = {
 
 export const verifyToken = async (token: string, secret: string) => {
   const payload = (await verify(token, secret)) as DefineJWT;
+
+  const user = await UserRepository.findUserWithInfoById(payload.sub);
+  if (!user || user.tokenVersion !== payload.tokenVersion) {
+    throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Token revoked");
+  }
 
   // Validate issuer
   if (payload.iss !== ISSUER) {

@@ -50,6 +50,13 @@ export const UserRepository = {
     });
   },
 
+  async incrementTokenVersion(userId: string) {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { tokenVersion: { increment: 1 } },
+    });
+  },
+
   async findAllUserWithInfo() {
     const users = await prisma.user.findMany({
       include: {
