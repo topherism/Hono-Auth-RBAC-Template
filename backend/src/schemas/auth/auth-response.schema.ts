@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@hono/zod-openapi";
 import { UserInfoSchema } from "../users";
-import { RoleSchema } from "../roles-permissions/role.schema";
+import { RoleSchema } from "../roles-permissions";
 
 extendZodWithOpenApi(z);
 

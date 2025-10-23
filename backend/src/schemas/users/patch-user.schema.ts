@@ -1,7 +1,7 @@
 // src/schemas/users.ts
 import { z } from "zod";
 import { RoleName } from "@prisma/client";
-import { RoleSchema } from "../roles-permissions/role.schema";
+import { RoleSchema } from "../roles-permissions";
 
 export const PatchUserSchema = z.object({
   email: z.string().email().optional().openapi({

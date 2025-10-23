@@ -1,6 +1,6 @@
 import { ROLES, type Role } from "@/constants/roles";
 import { z } from "zod";
-import { RoleSchema } from "../roles-permissions/role.schema";
+import { RoleSchema } from "@/schemas/roles-permissions";
 
 export const CreateUserSchema = z
   .object({

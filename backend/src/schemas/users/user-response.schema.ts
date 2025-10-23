@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UserInfoSchema } from "./user-info.schema";
-import { RoleSchema } from "../roles-permissions/role.schema";
+import { RoleSchema } from "../roles-permissions";
 
 export const UserResponseSchema = z.object({
   id: z.string().uuid(),
