@@ -3,11 +3,10 @@ import auth from "@/routes/auth/auth.index";
 import users from "@/routes/users/users.index";
 import role_permissions from "@/routes/role-permission/role-permission.index";
 
-const api = new OpenAPIHono();
-
-api.route("/", auth);
-api.route("/", users);
-api.route("/", role_permissions);
+const api = new OpenAPIHono()
+  .route("/", auth)
+  .route("/", users)
+  .route("/", role_permissions);
 
 export default api;
 

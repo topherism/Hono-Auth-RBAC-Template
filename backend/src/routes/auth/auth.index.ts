@@ -4,11 +4,14 @@ import { createRouter } from "@/lib/create-app";
 
 import * as handlers from "./auth.handlers";
 import * as routes from "./auth.routes";
-import { ipRateLimiter, tokenRateLimiter } from "@/middlewares/rate-limit.middleware";
+import {
+  ipRateLimiter,
+  tokenRateLimiter,
+} from "@/middlewares/rate-limit.middleware";
 
 const router = createRouter();
 
-//middleware 
+//middleware
 router.use(routes.login.path, ipRateLimiter);
 router.use(routes.refresh.path, tokenRateLimiter);
 
