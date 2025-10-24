@@ -14,6 +14,6 @@ const router = createRouter();
 // Public route
 
 router.openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
-
+router.openapi(routes.patchRolePermission, handlers.patchRolePermission);
 
 export default router;

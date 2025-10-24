@@ -33,6 +33,7 @@ export const CreateUserSchema = z
     }),
     role: RoleSchema,
   })
+  .strict()
   .openapi("CreateUserSchema");
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;

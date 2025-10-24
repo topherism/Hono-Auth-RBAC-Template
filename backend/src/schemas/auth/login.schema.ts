@@ -32,6 +32,7 @@ export const LoginSchema = z
       .min(6, { message: "Password must be at least 6 characters long." })
       .openapi({ example: "password123", description: "Secure password" }),
   })
+  .strict()
   .openapi("LoginSchema");
 
 // ✅ Export inferred TS types

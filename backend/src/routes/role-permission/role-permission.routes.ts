@@ -4,6 +4,7 @@ import {
   PermissionInputSchema,
   RoleInputSchema,
   RolePermissionListSchema,
+  RolePermissionSchema,
 } from "@/schemas/roles-permissions";
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
@@ -33,7 +34,7 @@ export const getAllRolePermission = createRoute({
   },
 });
 
-export const assignPermissionToRole = createRoute({
+export const patchRolePermission = createRoute({
   path: "/role-permissions",
   method: "patch",
   request: {
@@ -45,12 +46,20 @@ export const assignPermissionToRole = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      RolePermissionListSchema,
+      RolePermissionSchema,
       "Assigned permissions to role and returned updated role-permission mappings"
+    ),
+    [HttpStatusCodes.BAD_REQUEST]: jsonContent(
+      createErrorSchema(RolePermissionListSchema),
+      "Missing role or permissions to add/remove"
+    ),
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(RolePermissionListSchema),
+      "No permissions provided to add or remove"
     ),
   },
 });
 
 // Export route types for handlers
 export type GetAllRolePermissionRoute = typeof getAllRolePermission;
-export type AssignPermissionToRoleRoute = typeof assignPermissionToRole;
+export type PatchRolePermissionRoute = typeof patchRolePermission;

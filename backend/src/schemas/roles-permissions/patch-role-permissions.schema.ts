@@ -1,6 +1,4 @@
 import z from "zod";
-import { ROLES } from "@/constants/roles";
-import { PERMISSIONS } from "@/constants/permissions";
 import { RoleSchema, PermissionSchema } from "@/schemas/roles-permissions";
 
 /**
@@ -21,17 +19,9 @@ export const PatchRolePermissionSchema = z
       .optional()
       .describe("Permissions to be removed from the role."),
   })
+  .strict()
   .refine(
     (data) => data.add?.length || data.remove?.length,
     "At least one of 'add' or 'remove' must be provided."
   )
-  .openapi({
-    title: "PatchRolePermission",
-    description:
-      "Partially update a role’s permissions. You can specify permissions to add and/or remove.",
-    example: {
-      role: ROLES.ADMIN,
-      add: [PERMISSIONS.CREATE_USER, PERMISSIONS.UPDATE_USER],
-      remove: [PERMISSIONS.DELETE_USER],
-    },
-  });
+  .openapi("PatchRolePermissionSchema");
