@@ -4,7 +4,7 @@ A backend microservice for authentication, role-based access control (RBAC), and
 Built with **TypeScript**, **Node.js**, **Prisma**, and **Hono**.
 
 🧩 Features
-- 🔑 User Authentication (Login, Register, Refresh Tokens)
+- 🔑 User Authentication (Login, Refresh Tokens)
 - 🧠 Role-Based Access Control (RBAC)
 - ⚙️ Fine-Grained Permissions
 - 🗂️ Role & Permission Management API
