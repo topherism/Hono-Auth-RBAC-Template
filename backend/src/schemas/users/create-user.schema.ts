@@ -34,6 +34,6 @@ export const CreateUserSchema = z
     role: RoleSchema,
   })
   .strict()
-  .openapi("CreateUserSchema");
+  .openapi("Create UserSchema");
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;

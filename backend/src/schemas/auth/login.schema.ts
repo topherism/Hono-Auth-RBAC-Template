@@ -33,7 +33,7 @@ export const LoginSchema = z
       .openapi({ example: "password123", description: "Secure password" }),
   })
   .strict()
-  .openapi("LoginSchema");
+  .openapi("Login Schema");
 
 // ✅ Export inferred TS types
 export type LoginInput = z.infer<typeof LoginSchema>;

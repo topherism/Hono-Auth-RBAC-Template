@@ -18,14 +18,6 @@ export const RolePermissionSchema = z
       .describe("List of permissions granted to this role."),
   })
   .strict()
-  .openapi({
-    title: "RolePermission",
-    description:
-      "Represents a role and the list of permissions assigned to it.",
-    example: {
-      role: ROLES.ADMIN,
-      permissions: [PERMISSIONS.CREATE_USER, PERMISSIONS.DELETE_USER],
-    },
-  });
+  .openapi("Grant/Deny RolePermissionSchema");
 
 export const RolePermissionListSchema = z.array(RolePermissionSchema);

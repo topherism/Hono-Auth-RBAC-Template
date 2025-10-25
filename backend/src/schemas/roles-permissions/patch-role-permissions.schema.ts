@@ -24,4 +24,4 @@ export const PatchRolePermissionSchema = z
     (data) => data.add?.length || data.remove?.length,
     "At least one of 'add' or 'remove' must be provided."
   )
-  .openapi("PatchRolePermissionSchema");
+  .openapi("Patch RolePermissionSchema");

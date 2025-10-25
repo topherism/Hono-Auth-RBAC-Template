@@ -13,13 +13,6 @@ export const UserRoleSchema = z
     role: RoleSchema.describe("The role assigned to the user."),
   })
   .strict()
-  .openapi({
-    title: "UserRole",
-    description: "Represents a user Id and the role assigned to them",
-    example: {
-      id: "",
-      permissions: [ROLES.SUPERADMIN, ROLES.ADMIN],
-    },
-  });
+  .openapi("Patch UserRoleSchema");
 
 export const UserRoleListSchema = z.array(UserRoleSchema);
