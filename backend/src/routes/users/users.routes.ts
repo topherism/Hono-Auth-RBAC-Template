@@ -31,7 +31,7 @@ export const createUser = createRoute({
     This endpoint allows admins to create new users.
     You must provide a unique email and valid role.
   `,
-  security: [{ BearerAuth: [] }],
+  // security: [{ BearerAuth: [] }],
   operationId: "createUser",
   request: {
     body: jsonContentRequired(CreateUserSchema, "Create a new user"),
