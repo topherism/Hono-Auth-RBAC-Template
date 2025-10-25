@@ -2,8 +2,8 @@
 
 import { createRouter } from "@/lib/create-app";
 
-import * as handlers from "./users-permissions.handler";
-import * as routes from "./users-permissions.routes";
+import * as handlers from "./users-role.handler";
+import * as routes from "./users-role.routes";
 import { authenticationMiddleware } from "@/middlewares/authentication.middleware";
 import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
@@ -13,26 +13,16 @@ import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 const router = createRouter();
 
 //applied authentication middleware and rate limiter
-router.use("/users/permissions/*", authenticationMiddleware, userRateLimiter);
+router.use("/users/role/*", authenticationMiddleware, userRateLimiter);
 
 router.use(
-  routes.grantUserPermissions.path,
+  routes.patchUserRole.path,
   authorizeMiddleware(
     ROLES.SUPERADMIN,
     ROLES.ADMIN,
-    PERMISSIONS.GRANT_USER_PERMISSIONS
+    PERMISSIONS.PATCH_USER_ROLE
   )
 );
-router.openapi(routes.grantUserPermissions, handlers.grantUserPermissions);
-
-router.use(
-  routes.denyUserPermissions.path,
-  authorizeMiddleware(
-    ROLES.SUPERADMIN,
-    ROLES.ADMIN,
-    PERMISSIONS.DENY_USER_PERMISSIONS
-  )
-);
-router.openapi(routes.denyUserPermissions, handlers.denyUserPermissions);
+router.openapi(routes.patchUserRole, handlers.patchUserRole);
 
 export default router;

@@ -10,7 +10,7 @@ import {
   PermissionInputSchema,
   PermissionListSchema,
 } from "@/schemas/roles-permissions";
-import { UserPermissionSchema } from "@/schemas/user-permissions";
+import { UserPermissionsSchema } from "@/schemas/user-permissions";
 import { notFoundSchema } from "@/lib/constants";
 
 const tags = ["User-Permissions"];
@@ -28,7 +28,7 @@ export const grantUserPermissions = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      UserPermissionSchema,
+      UserPermissionsSchema,
       "Granted Permissions to user & returned updated user-role-permission"
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User not found"),
@@ -62,7 +62,7 @@ export const denyUserPermissions = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      UserPermissionSchema,
+      UserPermissionsSchema,
       "Denied Permissions to user & returned updated user-role-permission"
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User not found"),

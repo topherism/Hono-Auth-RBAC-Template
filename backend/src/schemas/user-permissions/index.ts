@@ -1,1 +1,1 @@
-export * from "./user-permission.schema";
+export * from "./user-permissions.schema";

@@ -7,7 +7,7 @@ import { PermissionSchema } from "@/schemas/roles-permissions/permission.schema"
  * Role-Permission Mapping Schema
  * Defines the structure of a role and its associated permissions.
  */
-export const UserPermissionSchema = z
+export const UserPermissionsSchema = z
   .object({
     id: z.string().uuid().describe("The unique identifier of the user."),
     permissions: z
@@ -26,4 +26,4 @@ export const UserPermissionSchema = z
     },
   });
 
-export const UserPermissionListSchema = z.array(UserPermissionSchema);
+export const UserPermissionsListSchema = z.array(UserPermissionsSchema);
