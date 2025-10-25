@@ -1,2 +1,0 @@
-# TrackKIT
-Kit Inventory Tracker
