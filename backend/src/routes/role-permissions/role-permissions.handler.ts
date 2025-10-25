@@ -3,8 +3,9 @@
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import {
+  DenyRolePermissionRoute,
   GetAllRolePermissionRoute,
-  PatchRolePermissionRoute,
+  GrantRolePermissionRoute,
 } from "./role-permissions.routes";
 import { RolePermissionsService } from "@/services/role-permission.service";
 import { logger } from "@/utils/logger";
@@ -19,34 +20,44 @@ export const getAllRolePermissions: AppRouteHandler<
   return c.json(role_permissions, HttpStatusCodes.OK);
 };
 
-export const patchRolePermission: AppRouteHandler<
-  PatchRolePermissionRoute
+export const grantRolePermission: AppRouteHandler<
+  GrantRolePermissionRoute
 > = async (c) => {
-  const { role, add, remove } = c.req.valid("json");
+  const { role, permissions } = c.req.valid("json");
 
-  let updatedRolePermissions;
-
-  if (add && add.length > 0) {
-    updatedRolePermissions =
-      await RolePermissionsService.assignPermissionToRole(role, add);
-    logger.info(`Assigned permissions to role '${role}': ${add.join(", ")}`);
-  }
-
-  // 🔴 Handle removing permissions
-  if (remove && remove.length > 0) {
-    updatedRolePermissions =
-      await RolePermissionsService.unassignPermissionToRole(role, remove);
-    logger.info(
-      `Removed permissions from role '${role}': ${remove.join(", ")}`
-    );
-  }
-
-  if ((!add || add.length === 0) && (!remove || remove.length === 0)) {
+  if (!permissions || permissions.length === 0) {
     throw new AppError(
       HttpStatusCodes.BAD_REQUEST,
-      "You must provide at least one permission to add or remove."
+      "You must provide at least one permission to add."
     );
   }
+
+  const updatedRolePermissions =
+    await RolePermissionsService.assignPermissionToRole(role, permissions);
+  logger.info(
+    `Assigned permissions to role '${role}': ${permissions.join(", ")}`
+  );
+
+  return c.json(updatedRolePermissions, HttpStatusCodes.OK);
+};
+
+export const denyRolePermission: AppRouteHandler<
+  DenyRolePermissionRoute
+> = async (c) => {
+  const { role, permissions } = c.req.valid("json");
+
+  if (!permissions || permissions.length === 0) {
+    throw new AppError(
+      HttpStatusCodes.BAD_REQUEST,
+      "You must provide at least one permission to remove."
+    );
+  }
+  // 🔴 Handle removing permissions
+  const updatedRolePermissions =
+    await RolePermissionsService.unassignPermissionToRole(role, permissions);
+  logger.info(
+    `Removed permissions from role '${role}': ${permissions.join(", ")}`
+  );
 
   return c.json(updatedRolePermissions, HttpStatusCodes.OK);
 };

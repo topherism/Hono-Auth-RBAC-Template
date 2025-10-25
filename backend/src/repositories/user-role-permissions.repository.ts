@@ -23,7 +23,6 @@ export const UserRolePermissionRepository = {
         },
       },
     });
-    console.log(users);
 
     const usersWithEffectivePerms = users.map((user) => {
       const rolePerms =
@@ -56,8 +55,7 @@ export const UserRolePermissionRepository = {
       };
     });
 
-    console.log(usersWithEffectivePerms);
-
     return usersWithEffectivePerms;
   },
+
 };

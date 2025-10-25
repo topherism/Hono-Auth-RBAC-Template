@@ -2,10 +2,10 @@ import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import {
   jsonContent,
-  jsonContentOneOf,
-  jsonContentRequired,
 } from "stoker/openapi/helpers";
-import { UserRolePermissionsListResponseSchema } from "@/schemas/user-role-permissions";
+import {
+  UserRolePermissionsListResponseSchema,
+} from "@/schemas/user-role-permissions";
 
 const tags = ["User-Role-Permissions"];
 
@@ -20,6 +20,5 @@ export const getAllUserRolePermissions = createRoute({
     ),
   },
 });
-
 // Export route types for handlers
 export type GetAllUserRolePermissionsRoute = typeof getAllUserRolePermissions;

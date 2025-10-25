@@ -11,10 +11,7 @@ export const getAllUserRolePermissions: AppRouteHandler<
 > = async (c) => {
   const user_role_permissions =
     await UserRolePermissionsService.getAllUserRolePermissions();
-  logger.info("fetched all users with their role and permissions");
-
-  return c.json(
-    user_role_permissions,
-    HttpStatusCodes.OK
-  );
+    
+  logger.info("Fetched all users with their role and permissions");
+  return c.json(user_role_permissions, HttpStatusCodes.OK);
 };

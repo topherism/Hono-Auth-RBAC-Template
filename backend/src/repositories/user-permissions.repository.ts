@@ -13,7 +13,7 @@ export const UserPermissionRepository = {
     });
   },
 
-  async getEffectivePermissions(userId: string) {
+  async getEffectivePermissionsById(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -61,5 +61,38 @@ export const UserPermissionRepository = {
       effective
     );
     return effective;
+  },
+
+  async grantManyPermissions(userId: string, permissionIds: number[]) {
+    return prisma.userPermission.createMany({
+      data: permissionIds.map((id) => ({ userId, permissionId: id })),
+      skipDuplicates: true,
+    });
+  },
+
+  async denyManyPermissions(userId: string, permissionIds: number[]) {
+    return prisma.userDeniedPermission.createMany({
+      data: permissionIds.map((permissionId) => {
+        return { userId, permissionId };
+      }),
+    });
+  },
+
+  async removeGrantedPermissions(userId: string, permissionIds: number[]) {
+    return prisma.userPermission.deleteMany({
+      where: {
+        userId,
+        permissionId: { in: permissionIds },
+      },
+    });
+  },
+
+  async removeDeniedPermissions(userId: string, permissionIds: number[]) {
+    return prisma.userDeniedPermission.deleteMany({
+      where: {
+        userId,
+        permissionId: { in: permissionIds },
+      },
+    });
   },
 };

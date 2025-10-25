@@ -1,8 +1,4 @@
-import { notFoundSchema } from "@/lib/constants";
 import {
-  PatchRolePermissionSchema,
-  PermissionInputSchema,
-  RoleInputSchema,
   RolePermissionListSchema,
   RolePermissionSchema,
 } from "@/schemas/roles-permissions";
@@ -10,14 +6,10 @@ import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import {
   jsonContent,
-  jsonContentOneOf,
   jsonContentRequired,
 } from "stoker/openapi/helpers";
 import {
   createErrorSchema,
-  createMessageObjectSchema,
-  IdParamsSchema,
-  IdUUIDParamsSchema,
 } from "stoker/openapi/schemas";
 
 const tags = ["Role-Permissions"];
@@ -34,12 +26,39 @@ export const getAllRolePermission = createRoute({
   },
 });
 
-export const patchRolePermission = createRoute({
-  path: "/role-permissions",
-  method: "patch",
+export const grantRolePermission = createRoute({
+  path: "/role-permissions/grant",
+  method: "post",
   request: {
     body: jsonContentRequired(
-      PatchRolePermissionSchema,
+      RolePermissionSchema,
+      "Role & Permissions to assign"
+    ),
+  },
+  tags,
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      RolePermissionSchema,
+      "Assigned permissions to role and returned updated role-permission mappings"
+    ),
+    [HttpStatusCodes.BAD_REQUEST]: jsonContent(
+      createErrorSchema(RolePermissionListSchema),
+      "Missing role or permissions to add/remove"
+    ),
+    [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(RolePermissionListSchema),
+      "No permissions provided to add or remove"
+    ),
+  },
+});
+
+
+export const denyRolePermission = createRoute({
+  path: "/role-permissions/deny",
+  method: "post",
+  request: {
+    body: jsonContentRequired(
+      RolePermissionSchema,
       "Role & Permissions to assign"
     ),
   },
@@ -62,4 +81,5 @@ export const patchRolePermission = createRoute({
 
 // Export route types for handlers
 export type GetAllRolePermissionRoute = typeof getAllRolePermission;
-export type PatchRolePermissionRoute = typeof patchRolePermission;
+export type GrantRolePermissionRoute = typeof grantRolePermission;
+export type DenyRolePermissionRoute = typeof denyRolePermission;

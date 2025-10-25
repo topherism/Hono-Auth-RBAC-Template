@@ -57,6 +57,14 @@ export const UserRepository = {
     });
   },
 
+  async findUserById(id: string) {
+    const user = await prisma.user.findFirst({
+      where: { id },
+    });
+
+    return user;
+  },
+
   async findAllUserWithInfo() {
     const users = await prisma.user.findMany({
       include: {

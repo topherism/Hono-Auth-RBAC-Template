@@ -18,5 +18,4 @@ export const RoleInputSchema = z.object({
   role: RoleSchema,
 });
 
-
 export type RoleInput = z.infer<typeof RoleSchema>;

@@ -16,9 +16,11 @@ export const PermissionSchema = z
 
 export const PermissionListSchema = z.array(PermissionSchema);
 
-export const PermissionInputSchema = z
-  .array(PermissionSchema)
-  .nonempty("At least one permission must be provided.");
+export const PermissionInputSchema = z.object({
+  permissions: z
+    .array(PermissionSchema)
+    .nonempty("At least one permission must be provided."),
+});
 
 export type PermissionType = z.infer<typeof PermissionSchema>; // single permission
-export type PermissionInputList = z.infer<typeof PermissionInputSchema>;
+export type PermissionInputList = z.infer<typeof PermissionListSchema>;
