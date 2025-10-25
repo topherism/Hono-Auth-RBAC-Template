@@ -11,6 +11,7 @@ export const UserPermissionRepository = {
       where: { userId: id },
     });
   },
+  
   async findUserDeniedPermissionsById(id: string) {
     return prisma.userDeniedPermission.findMany({
       where: { userId: id },
@@ -43,10 +44,10 @@ export const UserPermissionRepository = {
     const rolePerms =
       user.roleInfo?.rolePerms.map((rp) => rp.permission.name) ?? [];
 
-    // 2️⃣ User granted permissions (explicitly assigned)
+    // 2️⃣ User additional permissions
     const granted = user.permissions.map((up) => up.permission.name);
 
-    // 3️⃣ User denied permissions (explicitly removed)
+    // 3️⃣ User denied permissions
     const denied = user.deniedPermissions.map((dp) => dp.permission.name);
 
     // 4️⃣ Compute effective permissions
