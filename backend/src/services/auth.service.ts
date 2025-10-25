@@ -35,7 +35,7 @@ export const AuthService = {
     const { password: pass, ...safeUser } = user;
 
     const effectivePermissions =
-      await UserPermissionRepository.getEffectivePermissions(user.id);
+      await UserPermissionRepository.getEffectivePermissionsById(user.id);
 
     logger.info(
       "Effective permissions for user %s: %o",

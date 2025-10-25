@@ -4,13 +4,8 @@ import {
 } from "@/schemas/roles-permissions";
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import {
-  jsonContent,
-  jsonContentRequired,
-} from "stoker/openapi/helpers";
-import {
-  createErrorSchema,
-} from "stoker/openapi/schemas";
+import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
+import { createErrorSchema } from "stoker/openapi/schemas";
 
 const tags = ["Role-Permissions"];
 
@@ -18,6 +13,11 @@ export const getAllRolePermission = createRoute({
   path: "/role-permissions",
   method: "get",
   tags,
+  summary: "Get all role-permissions",
+  description: `
+    This endpoint retrieves all roles along with their assigned permissions.
+  `,
+  operationId: "getAllRolePermissions",
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       RolePermissionListSchema,
@@ -29,13 +29,18 @@ export const getAllRolePermission = createRoute({
 export const grantRolePermission = createRoute({
   path: "/role-permissions/grant",
   method: "post",
+  tags,
+  summary: "Grant role-permissions",
+  description: `
+    This endpoint assigns specified permissions to a role.
+  `,
+  operationId: "grantRolePermissions",
   request: {
     body: jsonContentRequired(
       RolePermissionSchema,
       "Role & Permissions to assign"
     ),
   },
-  tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       RolePermissionSchema,
@@ -52,21 +57,25 @@ export const grantRolePermission = createRoute({
   },
 });
 
-
 export const denyRolePermission = createRoute({
   path: "/role-permissions/deny",
   method: "post",
+  tags,
+  summary: "Deny role-permissions",
+  description: `
+    This endpoint removes specified permissions from a role.
+  `,
+  operationId: "denyRolePermissions",
   request: {
     body: jsonContentRequired(
       RolePermissionSchema,
-      "Role & Permissions to assign"
+      "Role and Permissions to remove"
     ),
   },
-  tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       RolePermissionSchema,
-      "Assigned permissions to role and returned updated role-permission mappings"
+      "Removed permissions from role and returned updated role-permission mappings"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
       createErrorSchema(RolePermissionListSchema),

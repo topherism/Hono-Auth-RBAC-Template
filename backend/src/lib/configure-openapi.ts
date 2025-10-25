@@ -19,7 +19,6 @@ export default function configureOpenAPI(app: AppOpenAPI) {
         The documentation is powered by Scalar and automatically generated from the API source using OpenAPI.
 
         All secured endpoints require a valid Bearer JWT token.
-        Use the 🔒 "Authorize" button to authenticate requests.
       `,
       contact: {
         name: "Christopher Jay S. Manubay",

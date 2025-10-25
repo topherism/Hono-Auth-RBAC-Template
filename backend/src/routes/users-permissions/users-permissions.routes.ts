@@ -18,6 +18,12 @@ const tags = ["User-Permissions"];
 export const grantUserPermissions = createRoute({
   path: "/users/permissions/grant/{id}",
   method: "post",
+  tags,
+  summary: "Grant user-permissions",
+  description: `
+    This endpoint assigns specified permissions to a user.
+  `,
+  operationId: "grantUserPermissions",
   request: {
     params: IdUUIDParamsSchema,
     body: jsonContentRequired(
@@ -25,7 +31,6 @@ export const grantUserPermissions = createRoute({
       "Permissions to grant to the user"
     ),
   },
-  tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       UserPermissionsSchema,
@@ -52,6 +57,12 @@ export const grantUserPermissions = createRoute({
 export const denyUserPermissions = createRoute({
   path: "/users/permissions/deny/{id}",
   method: "delete",
+  tags,
+  summary: "Deny user-permissions",
+  description: `
+    This endpoint removes specified permissions from a user.
+  `,
+  operationId: "denyUserPermissions",
   request: {
     params: IdUUIDParamsSchema,
     body: jsonContentRequired(
@@ -59,7 +70,6 @@ export const denyUserPermissions = createRoute({
       "Permissions to deny to the user"
     ),
   },
-  tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       UserPermissionsSchema,

@@ -19,15 +19,20 @@ const tags = ["User-Permissions"];
 export const patchUserRole = createRoute({
   path: "/users/role/{id}",
   method: "patch",
+  tags,
+  summary: "Patch user-role",
+  description: `
+    This endpoint assigns a role to a user.
+  `,
+  operationId: "patchUserRole",
   request: {
     params: IdUUIDParamsSchema,
     body: jsonContentRequired(RoleInputSchema, "Role to assign to the user"),
   },
-  tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       UserRoleSchema,
-      "Granted Permissions to user & returned updated user-role-permission"
+      "Patched user role & returned updated user-role"
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "User not found"),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
@@ -35,14 +40,14 @@ export const patchUserRole = createRoute({
         createErrorSchema(IdUUIDParamsSchema),
         createErrorSchema(UserRoleSchema),
       ],
-      "No permissions provided to add or invalid user ID"
+      "No role provided to patch or invalid user ID"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContentOneOf(
       [
         createErrorSchema(IdUUIDParamsSchema),
         createErrorSchema(UserRoleSchema),
       ],
-      "Missing user ID or permissions to add"
+      "Missing user ID or role to patch"
     ),
   },
 });

@@ -26,7 +26,7 @@ export const createUser = createRoute({
   path: "/users",
   method: "post",
   tags,
-  // summary: "Create a new user account",
+  summary: "Create a new user account",
   description: `
     This endpoint allows admins to create new users.
     You must provide a unique email and valid role.
@@ -54,6 +54,12 @@ export const getAllUser = createRoute({
   path: "/users",
   method: "get",
   tags,
+  summary: "Get all users",
+  description: `
+    This endpoint retrieves a list of all users in the system.
+  `,
+  // security: [{ BearerAuth: [] }],
+  operationId: "getAllUsers",
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       UserListResponseSchema,
@@ -66,6 +72,11 @@ export const getOneUser = createRoute({
   path: "/users/{id}",
   method: "get",
   tags,
+  summary: "Get one users",
+  description: `
+    This endpoint retrieves a single user by their ID
+  `,
+  operationId: "getOneUsers",
   request: {
     params: IdUUIDParamsSchema,
   },
@@ -83,6 +94,11 @@ export const patchUser = createRoute({
   path: "/users/{id}",
   method: "patch",
   tags,
+  summary: "Patch one users",
+  description: `
+    This endpoint updates a user's information partially by their ID
+  `,
+  operationId: "patchUser",
   request: {
     params: IdUUIDParamsSchema,
     body: jsonContentRequired(PatchUserSchema, "Partial user update"),
