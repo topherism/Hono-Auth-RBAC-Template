@@ -5,7 +5,6 @@ import { verifyToken } from "@/utils/jwt";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import envConfig from "@/env";
-import { UserPermissionRepository } from "@/repositories/user-permissions.repository";
 
 export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
   try {
