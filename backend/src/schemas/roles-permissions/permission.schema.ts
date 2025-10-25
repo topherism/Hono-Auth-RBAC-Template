@@ -13,6 +13,9 @@ export const PermissionSchema = z
     description: "The permission identifier assigned to a role.",
     example: PERMISSIONS.CREATE_USER,
   });
+
+export const PermissionListSchema = z.array(PermissionSchema);
+
 export const PermissionInputSchema = z
   .array(PermissionSchema)
   .nonempty("At least one permission must be provided.");

@@ -1,6 +1,6 @@
 // src/repositories/user-role.repository.ts
 import { prisma } from "@/db/client";
-import { RoleName } from "@prisma/client";
+import { RoleInput } from "@/schemas/roles-permissions";
 
 export const RoleRepository = {
   async getAllRole() {
@@ -11,7 +11,7 @@ export const RoleRepository = {
     return prisma.role.findUnique({ where: { id: roleId } });
   },
 
-  async findRoleByName(roleName: RoleName) {
+  async findRoleByName(roleName: RoleInput) {
     return prisma.role.findUnique({
       where: { name: roleName },
     });

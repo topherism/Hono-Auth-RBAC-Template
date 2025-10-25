@@ -50,42 +50,4 @@ export const RolePermissionRepository = {
       },
     });
   },
-
-  async unassignPermissonToRole(role: RoleInput, remove: PermissionInputList) {
-    return prisma.rolePermission.deleteMany({
-      where: {
-        role: {
-          name: role,
-        },
-        permission: {
-          name: { in: remove },
-        },
-      },
-    });
-  },
-
-  async findPermissionIdsByNames(permissions: PermissionInputList) {
-    return prisma.permission.findMany({
-      where: {
-        name: { in: permissions },
-      },
-      select: { id: true },
-    });
-  },
-
-  //   /** Get all default permissions for a given role ID */
-  //   async getPermissionsByRoleId(roleId: number) {
-  //     return prisma.rolePermission.findMany({
-  //       where: { roleId },
-  //       include: { permission: true },
-  //     });
-  //   },
-
-  //   /** Optional: Get all roles that have a specific permission */
-  //   async getRolesByPermissionId(permissionId: number) {
-  //     return prisma.rolePermission.findMany({
-  //       where: { permissionId },
-  //       include: { role: true },
-  //     });
-  //   },
 };

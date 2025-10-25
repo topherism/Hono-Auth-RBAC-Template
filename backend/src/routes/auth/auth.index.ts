@@ -12,7 +12,6 @@ import { authenticationMiddleware } from "@/middlewares/authentication.middlewar
 
 const router = createRouter();
 
-//middleware
 router.use(routes.login.path, ipRateLimiter);
 router.openapi(routes.login, handlers.login);
 

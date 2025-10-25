@@ -3,13 +3,17 @@
 import { AppRouteHandler } from "@/lib/types";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
-import { LoginRoute, LogoutAllRoute, LogoutRoute, RefreshRoute } from "./auth.routes";
+import {
+  LoginRoute,
+  LogoutAllRoute,
+  LogoutRoute,
+  RefreshRoute,
+} from "./auth.routes";
 import { AuthService } from "@/services/auth.service";
 import { refreshTokenCookie } from "@/utils/jwt";
 
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { AppError } from "@/lib/errors";
-import envConfig from "@/env";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
   const { emailOrUsername, password } = c.req.valid("json");

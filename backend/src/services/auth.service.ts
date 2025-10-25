@@ -1,7 +1,9 @@
 import envConfig from "@/env";
 import { AppError } from "@/lib/errors";
 import { AuthRepository } from "@/repositories/auth.repository";
+import { UserPermissionRepository } from "@/repositories/user-permissions.repository";
 import { UserRepository } from "@/repositories/user.repository";
+import { PermissionInputList } from "@/schemas/roles-permissions";
 import { BcryptHelper } from "@/utils/hash";
 import { generateToken, verifyToken } from "@/utils/jwt";
 import { logger } from "@/utils/logger";
@@ -31,8 +33,21 @@ export const AuthService = {
 
     // Return result to handler
     const { password: pass, ...safeUser } = user;
+
+    const effectivePermissions =
+      await UserPermissionRepository.getEffectivePermissions(user.id);
+
+    logger.info(
+      "Effective permissions for user %s: %o",
+      user.id,
+      effectivePermissions
+    );
+
     return {
-      user: safeUser,
+      user: {
+        ...safeUser,
+        permissions: effectivePermissions as PermissionInputList,
+      },
       tokens: { accessToken, refreshToken },
     };
   },

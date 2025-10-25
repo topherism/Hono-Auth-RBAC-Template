@@ -1,14 +1,12 @@
 // src/services/user.service.ts
-import { UserRepository } from "@/repositories/user.repository";
-import { CreateUserInput, PatchUserInput } from "@/schemas/users";
-import { BcryptHelper } from "@/utils/hash";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import { RolePermissionRepository } from "@/repositories/role-permissions.repository";
 import { Permission } from "@/constants/permissions";
 import { PermissionInputList, RoleInput } from "@/schemas/roles-permissions";
 import { RoleRepository } from "@/repositories/role.repository";
+import { PermissionRepository } from "@/repositories/permission.repository";
+import { RolePermissionRepository } from "@/repositories/role-permissions.repository";
 
 export const RolePermissionsService = {
   async getAllRolePermissions() {
@@ -35,7 +33,7 @@ export const RolePermissionsService = {
     }
 
     const existingPermissions =
-      await RolePermissionRepository.findPermissionIdsByNames(add);
+      await PermissionRepository.findPermissionIdsByNames(add);
     if (existingPermissions.length !== add.length) {
       throw new AppError(
         HttpStatusCodes.BAD_REQUEST,
@@ -91,7 +89,7 @@ export const RolePermissionsService = {
 
     // 2️⃣ Find permission IDs
     const existingPermissions =
-      await RolePermissionRepository.findPermissionIdsByNames(remove);
+      await PermissionRepository.findPermissionIdsByNames(remove);
 
     if (existingPermissions.length !== remove.length) {
       throw new AppError(
