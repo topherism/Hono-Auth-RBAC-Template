@@ -1,4 +1,4 @@
-# 🔐 Auth RBAC Service
+# 🔐 Hono Auth RBAC Service
 
 A backend microservice for authentication, role-based access control (RBAC), and fine-grained permission management.  
 Built with **TypeScript**, **Node.js**, **Prisma**, and **Hono**.
