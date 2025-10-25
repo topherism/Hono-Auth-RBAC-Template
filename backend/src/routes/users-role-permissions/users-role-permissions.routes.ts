@@ -1,22 +1,16 @@
-import { UserRolePermissionsListResponseSchema } from "@/schemas/user-role-permissions";
-import { createRoute, z } from "@hono/zod-openapi";
+import { createRoute } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import {
   jsonContent,
   jsonContentOneOf,
   jsonContentRequired,
 } from "stoker/openapi/helpers";
-import {
-  createErrorSchema,
-  createMessageObjectSchema,
-  IdParamsSchema,
-  IdUUIDParamsSchema,
-} from "stoker/openapi/schemas";
+import { UserRolePermissionsListResponseSchema } from "@/schemas/user-role-permissions";
 
 const tags = ["User-Permissions"];
 
 export const getAllUserRolePermissions = createRoute({
-  path: "/users/role-permissions",
+  path: "/users-role-permissions",
   method: "get",
   tags,
   responses: {

@@ -1,9 +1,8 @@
 import { z } from "zod";
 import { PermissionListSchema, RoleSchema } from "../roles-permissions";
-import { UserInfoSchema } from "../users";
 
 export const UserRolePermissionsResponseSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   email: z.string().email(),
   username: z.string().nullable(),
   userInfo: z.object({
@@ -19,6 +18,6 @@ export const UserRolePermissionsListResponseSchema = z.array(
   UserRolePermissionsResponseSchema
 );
 
-export type UserRolePermissionsListResponse = z.infer<
+export type UserRolePermissionsListType = z.infer<
   typeof UserRolePermissionsListResponseSchema
 >;

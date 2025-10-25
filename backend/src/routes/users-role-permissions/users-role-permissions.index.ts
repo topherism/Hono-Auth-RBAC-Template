@@ -8,7 +8,6 @@ import { authenticationMiddleware } from "@/middlewares/authentication.middlewar
 import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
-import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 
 const router = createRouter();
 // already protected by authentication middleware @ users index

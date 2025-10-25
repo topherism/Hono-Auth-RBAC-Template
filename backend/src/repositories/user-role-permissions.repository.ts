@@ -1,5 +1,6 @@
 // src/repositories/user-permissions.repository.ts
 import { prisma } from "@/db/client";
+import { UserRolePermissionsListType } from "@/schemas/user-role-permissions";
 
 export const UserRolePermissionRepository = {
   async getUserWithEffectivePermissions() {
@@ -21,8 +22,7 @@ export const UserRolePermissionRepository = {
         },
       },
     });
-
-    if (!users) return [];
+    console.log(users);
 
     const usersWithEffectivePerms = users.map((user) => {
       const rolePerms =
@@ -35,16 +35,28 @@ export const UserRolePermissionRepository = {
         new Set([...rolePerms, ...granted].filter((p) => !denied.includes(p)))
       );
 
+      const {
+        firstName = "",
+        middleName = "",
+        lastName = "",
+      } = user.userInfo ?? {};
+
       return {
         id: user.id,
         email: user.email,
         username: user.username,
         role: user.role,
-        userInfo: user.userInfo,
+        userInfo: {
+          firstName,
+          middleName,
+          lastName,
+        },
         permissions: effectivePermissions,
       };
     });
 
-    return usersWithEffectivePerms;
+    console.log(usersWithEffectivePerms);
+
+    return usersWithEffectivePerms as UserRolePermissionsListType;
   },
 };

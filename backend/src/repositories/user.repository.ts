@@ -36,7 +36,7 @@ export const UserRepository = {
     });
 
     // At runtime, userInfo is guaranteed because you always create it
-    return user as UserWithInfo;
+    return user;
   },
 
   async updateUser(id: string, data: Prisma.UserUpdateInput) {

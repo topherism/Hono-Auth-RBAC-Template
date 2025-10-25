@@ -15,7 +15,7 @@ const router = createRouter();
 router.use(routes.login.path, ipRateLimiter);
 router.openapi(routes.login, handlers.login);
 
-router.use(routes.refresh.path, authenticationMiddleware, tokenRateLimiter);
+router.use(routes.refresh.path, tokenRateLimiter);
 router.openapi(routes.refresh, handlers.refresh);
 
 router.use("/auth/logout/*", authenticationMiddleware);
