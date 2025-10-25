@@ -1,5 +1,6 @@
 // lib/types.ts
 
+import { PermissionInputList, RoleInput } from "@/schemas/roles-permissions";
 import { OpenAPIHono, RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
 
@@ -9,7 +10,8 @@ export interface AppBindings {
     jwtPayload?: any;
     user?: {
       id: string;
-      role: string;
+      role: RoleInput;
+      permissions: PermissionInputList;
     };
   };
 }

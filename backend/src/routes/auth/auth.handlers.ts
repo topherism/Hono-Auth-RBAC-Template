@@ -86,7 +86,6 @@ export const refresh: AppRouteHandler<RefreshRoute> = async (c) => {
   }
 
   const tokens = await AuthService.refresh(refreshToken);
-  console.log(tokens, "got tokens");
 
   // Set new refresh token in cookie
   setCookie(c, "auth_refresh_token", tokens.refreshToken, refreshTokenCookie);

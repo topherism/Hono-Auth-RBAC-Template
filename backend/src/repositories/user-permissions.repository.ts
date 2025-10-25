@@ -1,5 +1,6 @@
 // src/repositories/user-permissions.repository.ts
 import { prisma } from "@/db/client";
+import { PermissionInputList } from "@/schemas/roles-permissions";
 
 export const UserPermissionRepository = {
   async findUserPermissionsById(id: string) {
@@ -50,17 +51,7 @@ export const UserPermissionRepository = {
       new Set([...rolePerms, ...granted].filter((p) => !denied.includes(p)))
     );
 
-    console.log(
-      "ROLE PERMS:",
-      rolePerms,
-      " GRANTED:",
-      granted,
-      " DENIED:",
-      denied,
-      " EFFECTIVE:",
-      effective
-    );
-    return effective;
+    return effective as PermissionInputList;
   },
 
   async grantManyPermissions(userId: string, permissionIds: number[]) {

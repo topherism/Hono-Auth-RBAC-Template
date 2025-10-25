@@ -5,6 +5,7 @@ import { verifyToken } from "@/utils/jwt";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import envConfig from "@/env";
+import { UserPermissionRepository } from "@/repositories/user-permissions.repository";
 
 export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
   try {
@@ -20,13 +21,17 @@ export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
     const payload = await verifyToken(token, envConfig.JWT_ACCESS_SECRET!);
 
     if (payload.type !== "access") {
-      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid token type");
+      throw new AppError(
+        HttpStatusCodes.UNAUTHORIZED,
+        `Invalid token type: ${payload.type}`
+      );
     }
 
-    // Attach user info to context for downstream handlers
-    c.set("user", { id: payload.sub, role: payload.role });
-
-    console.log(payload);
+    c.set("user", {
+      id: payload.sub!,
+      role: payload.role!,
+      permissions: payload.permissions!,
+    });
 
     return next();
   } catch (err: any) {

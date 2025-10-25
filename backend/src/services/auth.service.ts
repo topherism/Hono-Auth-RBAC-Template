@@ -76,10 +76,7 @@ export const AuthService = {
       throw new AppError(HttpStatusCodes.UNAUTHORIZED, "Invalid token type");
     }
 
-    // await AuthRepository.deleteRefreshTokenById(payload.sub!);
-    // logger.info("deleted refresh token")
-
-    // 🔥 Increment token version to revoke all existing access tokens
+    // Increment token version to revoke all existing access tokens
     await UserRepository.incrementTokenVersion(payload.sub!);
 
     // Delete all refresh tokens in DB
@@ -104,8 +101,11 @@ export const AuthService = {
       );
     }
 
-    const user = await UserRepository.findUserWithInfoById(tokenRecord.userId);
+    const user = await UserRepository.findUserById(tokenRecord.userId);
 
+    if (!user) {
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "User no longer exists");
+    }
     // Generate new access token (and optionally new refresh token)
     const {
       accessToken,
@@ -122,6 +122,9 @@ export const AuthService = {
       jti
     );
 
-    return { accessToken, refreshToken: newRefreshToken };
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+    };
   },
 };

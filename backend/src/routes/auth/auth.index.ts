@@ -1,4 +1,4 @@
-// src/routes/tasks/
+// src/routes/auth/auth.index.ts
 
 import { createRouter } from "@/lib/create-app";
 

@@ -21,5 +21,6 @@ export const getAllUserRolePermissions = createRoute({
     ),
   },
 });
+
 // Export route types for handlers
 export type GetAllUserRolePermissionsRoute = typeof getAllUserRolePermissions;

@@ -11,13 +11,12 @@ import { PERMISSIONS } from "@/constants/permissions";
 import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 
 const router = createRouter();
-// Public route
 
 //applied authentication middleware and rate limiter
 router.use("/users/*", authenticationMiddleware, userRateLimiter);
 
 router.use(
-  routes.createUser.path,
+  routes.getAllUser.path,
   authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN, PERMISSIONS.VIEW_USER)
 );
 router.openapi(routes.getAllUser, handlers.getAllUsers);

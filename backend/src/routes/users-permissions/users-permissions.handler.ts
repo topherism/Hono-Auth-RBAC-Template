@@ -7,8 +7,8 @@ import {
   DenyUserPermissionsRoute,
 } from "./users-permissions.routes";
 import { logger } from "@/utils/logger";
-import { AppError } from "@/lib/errors";
 import { UserPermissionsService } from "@/services/user-permission.service";
+import { UserRepository } from "@/repositories/user.repository";
 
 export const grantUserPermissions: AppRouteHandler<
   GrantUserPermissionsRoute
@@ -34,6 +34,13 @@ export const denyUserPermissions: AppRouteHandler<
 
   const updatedUserPermissions =
     await UserPermissionsService.denyUserPermissions(id, permissions);
+
+  // force logout by incrementing token version
+  await UserRepository.incrementTokenVersion(id);
+  // user permissions has been updated, so user has been forced to logout
+  logger.info(
+    `Incremented token version for user with ID '${id} to force logout'`
+  );
 
   logger.info(
     `Denied permissions to user ID '${id}:' ${permissions.join(", ")}`
