@@ -15,25 +15,26 @@ const router = createRouter();
 
 //applied all users rate limiter
 router.use(
-  "/api/users/*",
+  "/users/*",
+  authenticationMiddleware,
   userRateLimiter
 );
 
-// Protected route → requires valid JWT
-router.use(
-  routes.getAllUser.path,
-  authenticationMiddleware,
-  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN)
-);
-router.openapi(routes.getAllUser, handlers.getAllUsers);
-router.openapi(routes.createUser, handlers.createUser);
+
 router.openapi(routes.patchUser, handlers.patchUser);
+router.openapi(routes.getOneUser, handlers.getOneUser);
 
 router.use(
-  routes.getAllUser.path,
-  authenticationMiddleware,
-  authorizeMiddleware(ROLES.BORROWER)
+  routes.createUser.path,
+  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN, PERMISSIONS.VIEW_USER)
 );
-router.openapi(routes.getOneUser, handlers.getOneUser);
+router.openapi(routes.getAllUser, handlers.getAllUsers);
+
+router.use(
+  routes.createUser.path,
+  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN, PERMISSIONS.CREATE_USER)
+);
+router.openapi(routes.createUser, handlers.createUser);
+
 
 export default router;

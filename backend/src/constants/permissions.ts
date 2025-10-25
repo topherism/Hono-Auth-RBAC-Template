@@ -1,5 +1,6 @@
 export const PERMISSIONS = {
   CREATE_USER: 'create_user',
+  VIEW_USER: 'view_user',
   UPDATE_USER: 'update_user',
   DELETE_USER: 'delete_user',
   VIEW_REPORTS: 'view_reports',

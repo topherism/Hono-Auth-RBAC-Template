@@ -12,8 +12,14 @@ import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 
 const router = createRouter();
 // Public route
+router.use("/role-permissions/*", authenticationMiddleware, userRateLimiter);
 
+router.use(
+  routes.getAllRolePermission.path,
+  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN)
+);
 router.openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
+
 router.openapi(routes.patchRolePermission, handlers.patchRolePermission);
 
 export default router;

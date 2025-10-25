@@ -45,7 +45,7 @@ export const logout = createRoute({
 });
 
 export const logout_all = createRoute({
-  path: "/auth/logout-all",
+  path: "/auth/logout/all",
   method: "post",
   tags,
   responses: {
