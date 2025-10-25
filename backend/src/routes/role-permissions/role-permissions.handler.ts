@@ -5,7 +5,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import {
   GetAllRolePermissionRoute,
   PatchRolePermissionRoute,
-} from "./role-permission.routes";
+} from "./role-permissions.routes";
 import { RolePermissionsService } from "@/services/role-permission.service";
 import { logger } from "@/utils/logger";
 import { AppError } from "@/lib/errors";

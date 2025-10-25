@@ -2,10 +2,6 @@
 import { prisma } from "@/db/client";
 
 export const UserPermissionRepository = {
-  async getAll() {
-    return prisma.permission.findMany();
-  },
-
   async findUserPermissionsById(id: string) {
     return prisma.userPermission.findMany({
       where: { userId: id },

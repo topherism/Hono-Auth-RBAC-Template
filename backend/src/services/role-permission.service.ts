@@ -136,12 +136,4 @@ export const RolePermissionsService = {
 
     return formatted;
   },
-
-  //   async getOneUser(id: string) {
-  //     const user = await UserRepository.findUserWithInfoById(id);
-
-  //     if (!user) throw new AppError(HttpStatusCodes.NOT_FOUND, "User not found"); // user not found
-
-  //     return user;
-  //   },
 };

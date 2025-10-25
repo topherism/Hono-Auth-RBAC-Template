@@ -1,8 +1,7 @@
-// // src/repositories/user-role.repository.ts
-// import { prisma } from "@/db/client";
-// import {type Role} from "@/constants/roles";
+// src/repositories/user-role.repository.ts
+import { prisma } from "@/db/client";
 
-// export const UserRoleRepository = {
+export const UserRoleRepository = {
 //   async assignUserRole(userId: string, role: Role) {
 //     const userRole = await prisma.userRole.create({
 //       data: {
@@ -20,4 +19,4 @@
 //       include: { role: true },
 //     });
 //   }
-// };
+};

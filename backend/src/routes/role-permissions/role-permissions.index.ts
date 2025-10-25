@@ -2,8 +2,8 @@
 
 import { createRouter } from "@/lib/create-app";
 
-import * as handlers from "./role-permission.handler";
-import * as routes from "./role-permission.routes";
+import * as handlers from "./role-permissions.handler";
+import * as routes from "./role-permissions.routes";
 import { authenticationMiddleware } from "@/middlewares/authentication.middleware";
 import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
