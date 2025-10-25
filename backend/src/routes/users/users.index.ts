@@ -14,15 +14,7 @@ const router = createRouter();
 // Public route
 
 //applied all users rate limiter
-router.use(
-  "/users/*",
-  authenticationMiddleware,
-  userRateLimiter
-);
-
-
-router.openapi(routes.patchUser, handlers.patchUser);
-router.openapi(routes.getOneUser, handlers.getOneUser);
+router.use("/users/*", authenticationMiddleware, userRateLimiter);
 
 router.use(
   routes.createUser.path,
@@ -35,6 +27,7 @@ router.use(
   authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN, PERMISSIONS.CREATE_USER)
 );
 router.openapi(routes.createUser, handlers.createUser);
-
+router.openapi(routes.patchUser, handlers.patchUser);
+router.openapi(routes.getOneUser, handlers.getOneUser);
 
 export default router;

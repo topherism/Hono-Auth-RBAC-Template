@@ -7,9 +7,9 @@ import users_role_permissions from "@/routes/users-role-permissions/users-role-p
 const api = new OpenAPIHono()
   .route("/", auth)
   .route("/", role_permissions)
-  .route("/", users)
-  .route("/", users_role_permissions);
-
+  .route("/", users_role_permissions)
+  .route("/", users);
+  
 export default api;
 
 // ✅ Wrap with `T extends infer R ? R : never` to prevent deep type instantiation

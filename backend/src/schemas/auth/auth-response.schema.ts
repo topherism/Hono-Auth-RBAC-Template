@@ -6,7 +6,10 @@ import { PermissionListSchema, RoleSchema } from "../roles-permissions";
 extendZodWithOpenApi(z);
 
 const user = z.object({
-  id: z.string().uuid(),
+  id: z.string().regex(
+    /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$/,
+    "Invalid UUID123123"
+  ),
   email: z.string().email(),
   username: z.string().nullable(),
   createdAt: z.string().datetime(),

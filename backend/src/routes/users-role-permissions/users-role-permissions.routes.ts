@@ -7,10 +7,10 @@ import {
 } from "stoker/openapi/helpers";
 import { UserRolePermissionsListResponseSchema } from "@/schemas/user-role-permissions";
 
-const tags = ["User-Permissions"];
+const tags = ["User-Role-Permissions"];
 
 export const getAllUserRolePermissions = createRoute({
-  path: "/users-role-permissions",
+  path: "/users/role-permissions",
   method: "get",
   tags,
   responses: {

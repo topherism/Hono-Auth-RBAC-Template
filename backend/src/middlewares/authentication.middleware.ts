@@ -26,6 +26,8 @@ export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
     // Attach user info to context for downstream handlers
     c.set("user", { id: payload.sub, role: payload.role });
 
+    console.log(payload);
+
     return next();
   } catch (err: any) {
     throw new AppError(

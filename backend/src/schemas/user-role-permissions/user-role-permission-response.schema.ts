@@ -2,7 +2,7 @@ import { z } from "zod";
 import { PermissionListSchema, RoleSchema } from "../roles-permissions";
 
 export const UserRolePermissionsResponseSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   email: z.string().email(),
   username: z.string().nullable(),
   userInfo: z.object({

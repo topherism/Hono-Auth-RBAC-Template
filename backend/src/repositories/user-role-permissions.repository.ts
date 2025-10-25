@@ -1,5 +1,6 @@
 // src/repositories/user-permissions.repository.ts
 import { prisma } from "@/db/client";
+import { PermissionInputList } from "@/schemas/roles-permissions";
 import { UserRolePermissionsListType } from "@/schemas/user-role-permissions";
 
 export const UserRolePermissionRepository = {
@@ -51,12 +52,12 @@ export const UserRolePermissionRepository = {
           middleName,
           lastName,
         },
-        permissions: effectivePermissions,
+        permissions: effectivePermissions as PermissionInputList,
       };
     });
 
     console.log(usersWithEffectivePerms);
 
-    return usersWithEffectivePerms as UserRolePermissionsListType;
+    return usersWithEffectivePerms;
   },
 };
