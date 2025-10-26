@@ -1,4 +1,4 @@
-# 🔐 Hono Auth RBAC Service
+# 🔐 Hono Auth RBAC Template
 
 A backend microservice for authentication, role-based access control (RBAC), and fine-grained permission management.  
 Built with **TypeScript**, **Node.js**, **Prisma**, and **Hono**.
@@ -15,22 +15,28 @@ Built with **TypeScript**, **Node.js**, **Prisma**, and **Hono**.
 
 ## 🚀 Getting Started
 
-### 1️⃣ Install dependencies
+### 1️⃣ Setup your DB
+```bash
+psql -U postgres
+CREATE DATABASE hono_auth_rbac;
+```
+
+### 2️⃣ Install dependencies
 ```bash
 npm install
 ```
 
-### 2️⃣ Generate Prisma client
+### 3️⃣ Generate Prisma client
 ```bash
 npx prisma generate
 ```
 
-### 3️⃣ Seed the database
+### 4️⃣ Seed the database
 ```bash
 npm run db:seed
 ```
 
-### 4️⃣ Start the development server
+### 5️⃣ Start the development server
 ```bash
 npm run dev
 ```
