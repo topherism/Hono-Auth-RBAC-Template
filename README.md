@@ -15,7 +15,8 @@ Built with **TypeScript**, **Node.js**, **Prisma**, and **Hono**.
 
 ## 🚀 Getting Started
 
-### 1️⃣ Setup your DB
+### 1️⃣ Setup your PostgreSQL Database
+Make sure PostgreSQL is installed and running on your system.
 ```bash
 psql -U postgres
 CREATE DATABASE hono_auth_rbac;
