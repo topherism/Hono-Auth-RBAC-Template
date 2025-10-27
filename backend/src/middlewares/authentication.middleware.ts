@@ -5,6 +5,7 @@ import { verifyToken } from "@/utils/jwt";
 import { AppError } from "@/lib/errors";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import envConfig from "@/env";
+import { UserPermissionRepository } from "@/repositories/user-permissions.repository";
 
 export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
   try {
@@ -26,10 +27,12 @@ export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
       );
     }
 
+    const effectivePermissions = await UserPermissionRepository.getEffectivePermissionsById(payload.sub);
+
     c.set("user", {
       id: payload.sub!,
       role: payload.role!,
-      permissions: payload.permissions!,
+      permissions: effectivePermissions,
     });
 
     return next();

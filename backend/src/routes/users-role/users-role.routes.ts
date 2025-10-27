@@ -14,7 +14,7 @@ import {
 import { notFoundSchema } from "@/lib/constants";
 import { UserRoleSchema } from "@/schemas/user-role";
 
-const tags = ["User-Permissions"];
+const tags = ["User-Role"];
 
 export const patchUserRole = createRoute({
   path: "/users/role/{id}",

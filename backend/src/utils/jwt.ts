@@ -7,7 +7,6 @@ import { sign, verify } from "hono/jwt";
 import type { CookieOptions } from "hono/utils/cookie";
 import type { JWTPayload } from "hono/utils/jwt/types";
 import { UserRepository } from "@/repositories/user.repository";
-import { UserPermissionRepository } from "@/repositories/user-permissions.repository";
 
 export interface DefineJWT extends JWTPayload {
   sub: string; // subject = userId
@@ -39,14 +38,10 @@ export const generateToken = async (
   const accessExp = now + 60 * 5; // 5 mins
   const refreshExp = now + 60 * 60 * 24; // 1 day
 
-  const effectivePermissions =
-    await UserPermissionRepository.getEffectivePermissionsById(userId);
-
   const accessPayload: DefineJWT = {
     sub: userId,
     tokenVersion,
     role,
-    permissions: effectivePermissions,
     iat: now,
     exp: accessExp,
     type: "access",
@@ -57,7 +52,6 @@ export const generateToken = async (
     sub: userId,
     tokenVersion,
     role,
-    permissions: effectivePermissions,
     iat: now,
     exp: refreshExp,
     type: "refresh", // 1 day
