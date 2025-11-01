@@ -9,17 +9,39 @@ import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
 import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
+import { Hono } from "hono";
+import { AppBindings } from "@/lib/types";
 
-const router = createRouter();
-// Public route
-router.use("/role-permissions/*", authenticationMiddleware, userRateLimiter);
+const router = createRouter()
+  .openapi(routes.grantRolePermission, handlers.grantRolePermission)
+  .openapi(routes.denyRolePermission, handlers.denyRolePermission)
+  .openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
 
-router.openapi(routes.grantRolePermission, handlers.grantRolePermission);
-router.openapi(routes.denyRolePermission, handlers.denyRolePermission);
-router.use(
-  routes.getAllRolePermission.path,
-  authorizeMiddleware(ROLES.SUPERADMIN, ROLES.ADMIN)
-);
-router.openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
+// router
+//   .use("/role-permissions/*", authenticationMiddleware, userRateLimiter)
+//   .use(
+//     routes.getAllRolePermission.path,
+//     authorizeMiddleware(
+//       ROLES.SUPERADMIN,
+//       ROLES.ADMIN,
+//       PERMISSIONS.VIEW_ROLE_PERMISSIONS
+//     )
+//   )
+//   .use(
+//     routes.grantRolePermission.path,
+//     authorizeMiddleware(
+//       ROLES.SUPERADMIN,
+//       ROLES.ADMIN,
+//       PERMISSIONS.PATCH_ROLE_PERMISSIONS
+//     )
+//   )
+//   .use(
+//     routes.denyRolePermission.path,
+//     authorizeMiddleware(
+//       ROLES.SUPERADMIN,
+//       ROLES.ADMIN,
+//       PERMISSIONS.PATCH_ROLE_PERMISSIONS
+//     )
+//   )
 
 export default router;

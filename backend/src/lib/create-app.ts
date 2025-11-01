@@ -11,9 +11,9 @@ import { csrf } from "hono/csrf";
 import { cors } from "hono/cors"; // ✅ ADD THIS
 
 export function createRouter() {
-  const app = new OpenAPIHono({
+  const app = new OpenAPIHono<AppBindings>({
     strict: false,
-    defaultHook
+    defaultHook,
   });
 
   // Register the bearer security scheme in the OpenAPI components
@@ -35,7 +35,7 @@ export function createRouter() {
 export default function createApp() {
   const app = createRouter();
 
-    app.use(
+  app.use(
     cors({
       origin: ["http://localhost:5173"], // or specify frontend URL e.g. "http://localhost:5173"
       allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],

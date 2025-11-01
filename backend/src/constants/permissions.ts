@@ -6,6 +6,8 @@ export const PERMISSIONS = {
   VIEW_ONE_USER: "view_one_user",
   PATCH_USER_ROLE: "patch_user_role",
   VIEW_ROLE_PERMISSIONS: "view_role_permissions",
+  // GRANT_ROLE_PERMISSIONS: "grant_user_permissions",
+  // DENY_ROLE_PERMISSIONS: "deny_user_permissions",
   PATCH_ROLE_PERMISSIONS: "patch_role_permissions",
   VIEW_USER_ROLE_PERMISSIONS: "view_user_role_permissions",
   GRANT_USER_PERMISSIONS: "grant_user_permissions",
