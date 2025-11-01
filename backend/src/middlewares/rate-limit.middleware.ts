@@ -15,10 +15,6 @@ export const getClientIp = (c: Context) => {
 
 // Rate limiter for public routes (login, register)
 export const ipRateLimiter = rateLimiter({
-  // windowMs: 60 * 1000, // 1 min
-  // limit: 5, // 5 requests per minute per IP
-  // message: "Too many requests. Please try again in 60 seconds.",
-  // keyGenerator: getClientIp,
   windowMs: 60 * 1000, // 1 minute
   limit: 5, // max 5 attempts per IP per minute
   keyGenerator: getClientIp,
@@ -40,18 +36,21 @@ export const userRateLimiter = rateLimiter({
     error: "Too many requests. Please try again in 60 seconds.",
   }),
 });
-
 export const tokenRateLimiter = rateLimiter({
-  windowMs: 10 * 1000, // 10 seconds
-  limit: 10, // allow max 10 requests per 10s per token
+  windowMs: 60 * 1000, // 10 seconds
+  limit: 20,
   keyGenerator: (c: Context) => {
-    // Try to identify user by Authorization Bearer token
     const authHeader = c.req.header("authorization");
-    if (!authHeader) return "anonymous";
-
+    if (!authHeader) return `refresh:${getClientIp(c)}`;
     const token = authHeader.replace(/^Bearer\s+/i, "").trim();
-    return token || "anonymous";
+    return `refresh:${token.substring(0, 50)}`;
   },
-  standardHeaders: true,
-  message: "Too many requests with this token, please try again in 10 seconds.",
+  standardHeaders: "draft-7",
+  handler: (c: Context) => {
+    return c.json(
+      { error: "Too many token refresh requests. Please try again in 60 seconds." },
+      429
+    );
+  },
 });
+
