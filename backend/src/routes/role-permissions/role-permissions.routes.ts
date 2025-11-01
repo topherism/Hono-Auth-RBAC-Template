@@ -10,7 +10,7 @@ import { createErrorSchema } from "stoker/openapi/schemas";
 const tags = ["Role-Permissions"];
 
 export const getAllRolePermission = createRoute({
-  path: "/role-permissions",
+  path: "/role/permissions",
   method: "get",
   tags,
   summary: "Get all role-permissions",
@@ -27,7 +27,7 @@ export const getAllRolePermission = createRoute({
 });
 
 export const grantRolePermission = createRoute({
-  path: "/role-permissions/grant",
+  path: "/role/permissions/grant",
   method: "post",
   tags,
   summary: "Grant role-permissions",
@@ -47,18 +47,18 @@ export const grantRolePermission = createRoute({
       "Assigned permissions to role and returned updated role-permission mappings"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
-      createErrorSchema(RolePermissionListSchema),
+      createErrorSchema(RolePermissionSchema),
       "Missing role or permissions to add/remove"
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(RolePermissionListSchema),
+      createErrorSchema(RolePermissionSchema),
       "No permissions provided to add or remove"
     ),
   },
 });
 
 export const denyRolePermission = createRoute({
-  path: "/role-permissions/deny",
+  path: "/role/permissions/deny",
   method: "post",
   tags,
   summary: "Deny role-permissions",
@@ -78,11 +78,11 @@ export const denyRolePermission = createRoute({
       "Removed permissions from role and returned updated role-permission mappings"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
-      createErrorSchema(RolePermissionListSchema),
+      createErrorSchema(RolePermissionSchema),
       "Missing role or permissions to add/remove"
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(RolePermissionListSchema),
+      createErrorSchema(RolePermissionSchema),
       "No permissions provided to add or remove"
     ),
   },

@@ -12,10 +12,16 @@ import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
 import { Hono } from "hono";
 import { AppBindings } from "@/lib/types";
 
+<<<<<<< HEAD
 const router = createRouter()
   .openapi(routes.grantRolePermission, handlers.grantRolePermission)
   .openapi(routes.denyRolePermission, handlers.denyRolePermission)
   .openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
+=======
+const router = createRouter();
+// Public route
+router.use("/role/permissions/*", authenticationMiddleware, userRateLimiter);
+>>>>>>> main
 
 // router
 //   .use("/role-permissions/*", authenticationMiddleware, userRateLimiter)

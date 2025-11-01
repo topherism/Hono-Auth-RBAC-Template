@@ -35,5 +35,4 @@ export const LoginSchema = z
   .strict()
   .openapi("Login Schema");
 
-// ✅ Export inferred TS types
 export type LoginInput = z.infer<typeof LoginSchema>;

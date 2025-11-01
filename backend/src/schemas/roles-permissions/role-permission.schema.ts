@@ -1,23 +1,41 @@
-// src/schemas/roles-permissions/role.schema.ts
+// src/schemas/roles-permissions/role-permission.schema.ts
 import { z } from "zod";
-import { ROLES, Role } from "@/constants/roles";
-import { PERMISSIONS, Permission } from "@/constants/permissions";
 import { RoleSchema } from "./role.schema";
-import { PermissionSchema } from "./permission.schema";
+import { PermissionListSchema } from "./permission.schema";
+import { extendZodWithOpenApi } from "@hono/zod-openapi";
+import { ROLES } from "@/constants/roles";
+import { PERMISSIONS } from "@/constants/permissions";
 
-/**
- * Role-Permission Mapping Schema
- * Defines the structure of a role and its associated permissions.
- */
+extendZodWithOpenApi(z);
+
 export const RolePermissionSchema = z
   .object({
-    role: RoleSchema.describe("The role name."),
-    permissions: z
-      .array(PermissionSchema)
-      .nonempty("At least one permission must be assigned to the role.")
-      .describe("List of permissions granted to this role."),
+    role: RoleSchema.openapi({
+      title: "Role",
+      description: "The role assigned to the user",
+      example: ROLES.ADMIN, // or whatever RoleSchema example is
+    }),
+    permissions: PermissionListSchema.openapi({
+      title: "Permissions",
+      description: "List of permissions assigned to the role",
+      example: [PERMISSIONS.CREATE_USER, PERMISSIONS.DELETE_USER], // match some PermissionSchema examples
+    }),
   })
-  .strict()
-  .openapi("Grant/Deny RolePermissionSchema");
+  .openapi("RolePermission");
 
-export const RolePermissionListSchema = z.array(RolePermissionSchema);
+export const RolePermissionListSchema = z
+  .array(RolePermissionSchema)
+  .openapi({
+    title: "RolePermissionList",
+    description: "List of roles with their permissions",
+    example: [
+      {
+        role: ROLES.SUPERADMIN,
+        permissions: [PERMISSIONS.CREATE_USER, PERMISSIONS.DELETE_USER],
+      },
+      {
+        role: ROLES.ADMIN,
+        permissions: [PERMISSIONS.VIEW_USER],
+      },
+    ],
+  });
