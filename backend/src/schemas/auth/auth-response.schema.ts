@@ -23,6 +23,6 @@ export const AuthResponseSchema = z
       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
       description: "JWT access token",
     }),
-  });
+  }).openapi("AuthResponseSchema");
 
 export type AuthResponse = z.infer<typeof AuthResponseSchema>;
