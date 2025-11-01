@@ -20,8 +20,9 @@ const routes = [
 ] as const;
 
 configureOpenAPI(app);
+
 routes.forEach((route) => {
-  app.route("/", route);
+  app.route("/api", route);
 });
 
 export type AppType = (typeof routes)[number];

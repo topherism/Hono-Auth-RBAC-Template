@@ -7,8 +7,7 @@ import {
   ipRateLimiter,
   tokenRateLimiter,
 } from "@/middlewares/rate-limit.middleware";
-import { Hono } from "hono";
-import { AppBindings } from "@/lib/types";
+import { wrapWithMiddlewares } from "@/lib/wrapWithMiddleware";
 
 /**
  * 1️⃣ This is the main RPC/OpenAPI router.
@@ -27,7 +26,7 @@ const router = createRouter()
   .openapi(routes.refresh, handlers.refresh);
 
 // attach per-route middleware separately
-router.use(routes.login.path, ipRateLimiter);
-router.use(routes.refresh.path, tokenRateLimiter);
+// router.use(routes.login.path, ipRateLimiter);
+// router.use(routes.refresh.path, tokenRateLimiter);
 
 export default router;

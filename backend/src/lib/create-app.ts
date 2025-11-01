@@ -9,6 +9,7 @@ import { AppError } from "./errors";
 import { StatusCode } from "hono/utils/http-status";
 import { csrf } from "hono/csrf";
 import { cors } from "hono/cors"; // ✅ ADD THIS
+import { ipRateLimiter, tokenRateLimiter, userRateLimiter } from "@/middlewares/rate-limit.middleware";
 
 export function createRouter() {
   const app = new OpenAPIHono<AppBindings>({
@@ -46,6 +47,28 @@ export default function createApp() {
   app.use(serveEmojiFavicon("🚀"));
   app.use(pinoLogger());
   app.use("/api/*", csrf());
+
+  
+  // 1️⃣ Apply IP rate limiter to auth routes (login, register)
+  app.use("/api/auth/login", ipRateLimiter);
+  app.use("/api/auth/register", ipRateLimiter); // if you have register
+  
+  // 2️⃣ Apply token rate limiter to refresh token route
+  app.use("/api/auth/refresh", tokenRateLimiter);
+  
+  // 3️⃣ Apply user rate limiter to ALL routes EXCEPT /auth/*
+  app.use("*", async (c, next) => {
+    const path = c.req.path;
+  
+    // Skip rate limiter for auth routes
+    if (path.startsWith("/api/auth/")) {
+      return next();
+    }
+  
+    // Apply user rate limiter for all other routes
+    return userRateLimiter(c, next);
+  });
+  
 
   app.notFound(notFound);
   app.onError((err, c) => {

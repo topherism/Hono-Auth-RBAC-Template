@@ -9,45 +9,35 @@ import { authorizeMiddleware } from "@/middlewares/authorization.middleware";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
 import { userRateLimiter } from "@/middlewares/rate-limit.middleware";
-import { Hono } from "hono";
-import { AppBindings } from "@/lib/types";
+import { wrapWithMiddlewares } from "@/lib/wrapWithMiddleware";
 
-<<<<<<< HEAD
 const router = createRouter()
-  .openapi(routes.grantRolePermission, handlers.grantRolePermission)
-  .openapi(routes.denyRolePermission, handlers.denyRolePermission)
-  .openapi(routes.getAllRolePermission, handlers.getAllRolePermissions);
-=======
-const router = createRouter();
-// Public route
-router.use("/role/permissions/*", authenticationMiddleware, userRateLimiter);
->>>>>>> main
-
-// router
-//   .use("/role-permissions/*", authenticationMiddleware, userRateLimiter)
-//   .use(
-//     routes.getAllRolePermission.path,
-//     authorizeMiddleware(
-//       ROLES.SUPERADMIN,
-//       ROLES.ADMIN,
-//       PERMISSIONS.VIEW_ROLE_PERMISSIONS
-//     )
-//   )
-//   .use(
-//     routes.grantRolePermission.path,
-//     authorizeMiddleware(
-//       ROLES.SUPERADMIN,
-//       ROLES.ADMIN,
-//       PERMISSIONS.PATCH_ROLE_PERMISSIONS
-//     )
-//   )
-//   .use(
-//     routes.denyRolePermission.path,
-//     authorizeMiddleware(
-//       ROLES.SUPERADMIN,
-//       ROLES.ADMIN,
-//       PERMISSIONS.PATCH_ROLE_PERMISSIONS
-//     )
-//   )
+  .openapi(
+    routes.getAllRolePermission,
+    wrapWithMiddlewares(
+      handlers.getAllRolePermissions,
+      authenticationMiddleware,
+      // userRateLimiter,
+      authorizeMiddleware(
+        ROLES.SUPERADMIN,
+        ROLES.ADMIN,
+        PERMISSIONS.VIEW_ROLE_PERMISSIONS
+      )
+    )
+  )
+  .openapi(
+    routes.grantRolePermission,
+    wrapWithMiddlewares(
+      handlers.grantRolePermission,
+      authenticationMiddleware,
+      // userRateLimiter,
+      authorizeMiddleware(
+        ROLES.SUPERADMIN,
+        ROLES.ADMIN,
+        PERMISSIONS.PATCH_ROLE_PERMISSIONS
+      )
+    )
+  )
+  .openapi(routes.denyRolePermission, handlers.denyRolePermission);
 
 export default router;

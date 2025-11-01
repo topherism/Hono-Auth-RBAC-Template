@@ -15,18 +15,30 @@ export const getClientIp = (c: Context) => {
 
 // Rate limiter for public routes (login, register)
 export const ipRateLimiter = rateLimiter({
-  windowMs: 60 * 1000, // 1 min
-  limit: 5, // 5 requests per minute per IP
-  message: "Too many requests. Please try again in 60 seconds.",
+  // windowMs: 60 * 1000, // 1 min
+  // limit: 5, // 5 requests per minute per IP
+  // message: "Too many requests. Please try again in 60 seconds.",
+  // keyGenerator: getClientIp,
+  windowMs: 60 * 1000, // 1 minute
+  limit: 5, // max 5 attempts per IP per minute
   keyGenerator: getClientIp,
+  statusCode: 429,
+  message: JSON.stringify({
+    error: "Too many login attempts. Try again in 60 seconds.",
+  }),
+  standardHeaders: true,
 });
 
 // Rate limiter for authenticated users
 export const userRateLimiter = rateLimiter({
   windowMs: 60 * 1000, // 1 minute
-  limit: 100, // 100 requests per user
-  message: "Too many requests. Please try again in 60 seconds.",
+  limit: 100, // max 100 requests per user
   keyGenerator: (c: Context) => c.get("user")?.id || getClientIp(c),
+  standardHeaders: true, // optional: adds X-RateLimit-* headers
+  statusCode: 429, // ✅ set HTTP 429
+  message: JSON.stringify({
+    error: "Too many requests. Please try again in 60 seconds.",
+  }),
 });
 
 export const tokenRateLimiter = rateLimiter({
